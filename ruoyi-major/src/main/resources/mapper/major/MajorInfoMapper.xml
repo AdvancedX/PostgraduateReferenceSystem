@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.major.mapper.MajorInfoMapper">
+    
+    <resultMap type="MajorInfo" id="MajorInfoResult">
+        <result property="id"    column="id"    />
+        <result property="schoolID"    column="schoolID"    />
+        <result property="majorID"    column="majorID"    />
+        <result property="major"    column="major"    />
+        <result property="researchDirection"    column="researchDirection"    />
+        <result property="politics"    column="politics"    />
+        <result property="language"    column="language"    />
+        <result property="math"    column="math"    />
+        <result property="majorSubject"    column="majorSubject"    />
+        <result property="reSubject"    column="reSubject"    />
+    </resultMap>
+
+    <sql id="selectMajorInfoVo">
+        select id, schoolID, majorID, major, researchDirection, politics, language, math, majorSubject, reSubject from major_info
+    </sql>
+
+    <select id="selectMajorInfoList" parameterType="MajorInfo" resultMap="MajorInfoResult">
+        <include refid="selectMajorInfoVo"/>
+        <where>  
+            <if test="schoolID != null  and schoolID != ''"> and schoolID = #{schoolID}</if>
+            <if test="majorID != null  and majorID != ''"> and majorID = #{majorID}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="researchDirection != null  and researchDirection != ''"> and researchDirection = #{researchDirection}</if>
+            <if test="politics != null  and politics != ''"> and politics = #{politics}</if>
+            <if test="language != null  and language != ''"> and language = #{language}</if>
+            <if test="math != null  and math != ''"> and math = #{math}</if>
+            <if test="majorSubject != null  and majorSubject != ''"> and majorSubject = #{majorSubject}</if>
+            <if test="reSubject != null  and reSubject != ''"> and reSubject = #{reSubject}</if>
+        </where>
+    </select>
+    
+    <select id="selectMajorInfoById" parameterType="Integer" resultMap="MajorInfoResult">
+        <include refid="selectMajorInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMajorInfo" parameterType="MajorInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into major_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schoolID != null">schoolID,</if>
+            <if test="majorID != null">majorID,</if>
+            <if test="major != null">major,</if>
+            <if test="researchDirection != null">researchDirection,</if>
+            <if test="politics != null">politics,</if>
+            <if test="language != null">language,</if>
+            <if test="math != null">math,</if>
+            <if test="majorSubject != null">majorSubject,</if>
+            <if test="reSubject != null">reSubject,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schoolID != null">#{schoolID},</if>
+            <if test="majorID != null">#{majorID},</if>
+            <if test="major != null">#{major},</if>
+            <if test="researchDirection != null">#{researchDirection},</if>
+            <if test="politics != null">#{politics},</if>
+            <if test="language != null">#{language},</if>
+            <if test="math != null">#{math},</if>
+            <if test="majorSubject != null">#{majorSubject},</if>
+            <if test="reSubject != null">#{reSubject},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMajorInfo" parameterType="MajorInfo">
+        update major_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolID != null">schoolID = #{schoolID},</if>
+            <if test="majorID != null">majorID = #{majorID},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="researchDirection != null">researchDirection = #{researchDirection},</if>
+            <if test="politics != null">politics = #{politics},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="math != null">math = #{math},</if>
+            <if test="majorSubject != null">majorSubject = #{majorSubject},</if>
+            <if test="reSubject != null">reSubject = #{reSubject},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMajorInfoById" parameterType="Integer">
+        delete from major_info where id = #{id}
+    </delete>
+
+    <delete id="deleteMajorInfoByIds" parameterType="String">
+        delete from major_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

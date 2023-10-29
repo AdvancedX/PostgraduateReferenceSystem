@@ -73,6 +73,13 @@
             <artifactId>ruoyi-school</artifactId>
         </dependency>
 
+        <!-- 专业信息-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-major</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

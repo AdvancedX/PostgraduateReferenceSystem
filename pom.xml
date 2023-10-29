@@ -190,6 +190,16 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 院校信息-->
+            <!-- 院校信息-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-major</artifactId>
+                <version>4.7.7</version>
+            </dependency>
+
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -201,6 +211,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-school</module>
+        <module>ruoyi-major</module>
     </modules>
     <packaging>pom</packaging>
 

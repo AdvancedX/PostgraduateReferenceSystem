@@ -14,7 +14,6 @@
     <meta name="renderer" content="webkit">
     <!-- 避免IE使用兼容模式 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="../static/favicon.ico" th:href="@{favicon.ico}"/>
     <style type="text/css">label.error { position:inherit;  }</style>
     <script>
         if(window.top!==window.self){alert('未登录或登录超时。请重新登录');window.top.location=window.location};
@@ -25,9 +24,6 @@
         <div class="row">
             <div class="col-sm-7">
                 <div class="signin-info">
-                    <div class="logopanel m-b">
-                        <h1><img alt="[ 若依 ]" src="../static/ruoyi.png" th:src="@{/ruoyi.png}"></h1>
-                    </div>
                     <div class="m-b"></div>
                     <h4>欢迎使用 <strong>辅助报考系统</strong></h4>
                     <ul class="m-b">
@@ -61,12 +57,6 @@
                     <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍候...">登录</button>
                 </form>
             </div>
-        </div>
-        <div class="signup-footer">
-            <div class="pull-left">
-                Copyright © 2018-2023 ruoyi.vip All Rights Reserved. <br>
-            </div>
-        </div>
     </div>
 <script th:inline="javascript"> var ctx = [[@{/}]]; var captchaType = [[${captchaType}]]; </script>
 <!--[if lte IE 8]><script>window.location.href=ctx+'html/ie.html';</script><![endif]-->
