@@ -67,6 +67,12 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 院校信息-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-school</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
