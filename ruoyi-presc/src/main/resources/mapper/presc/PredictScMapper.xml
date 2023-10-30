@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.presc.mapper.PredictScMapper">
+    
+    <resultMap type="PredictSc" id="PredictScResult">
+        <result property="id"    column="id"    />
+        <result property="sc1"    column="sc1"    />
+        <result property="sc2"    column="sc2"    />
+        <result property="sc3"    column="sc3"    />
+        <result property="sc4"    column="sc4"    />
+        <result property="sc5"    column="sc5"    />
+        <result property="re"    column="re"    />
+    </resultMap>
+
+    <sql id="selectPredictScVo">
+        select id, sc1, sc2, sc3, sc4, sc5, re from predict_sc
+    </sql>
+
+    <select id="selectPredictScList" parameterType="PredictSc" resultMap="PredictScResult">
+        <include refid="selectPredictScVo"/>
+        <where>  
+            <if test="sc1 != null "> and sc1 = #{sc1}</if>
+            <if test="sc2 != null "> and sc2 = #{sc2}</if>
+            <if test="sc3 != null "> and sc3 = #{sc3}</if>
+            <if test="sc4 != null "> and sc4 = #{sc4}</if>
+            <if test="sc5 != null "> and sc5 = #{sc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectPredictScById" parameterType="Integer" resultMap="PredictScResult">
+        <include refid="selectPredictScVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPredictSc" parameterType="PredictSc" useGeneratedKeys="true" keyProperty="id">
+        insert into predict_sc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sc1 != null">sc1,</if>
+            <if test="sc2 != null">sc2,</if>
+            <if test="sc3 != null">sc3,</if>
+            <if test="sc4 != null">sc4,</if>
+            <if test="sc5 != null">sc5,</if>
+            <if test="re != null">re,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sc1 != null">#{sc1},</if>
+            <if test="sc2 != null">#{sc2},</if>
+            <if test="sc3 != null">#{sc3},</if>
+            <if test="sc4 != null">#{sc4},</if>
+            <if test="sc5 != null">#{sc5},</if>
+            <if test="re != null">#{re},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePredictSc" parameterType="PredictSc">
+        update predict_sc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sc1 != null">sc1 = #{sc1},</if>
+            <if test="sc2 != null">sc2 = #{sc2},</if>
+            <if test="sc3 != null">sc3 = #{sc3},</if>
+            <if test="sc4 != null">sc4 = #{sc4},</if>
+            <if test="sc5 != null">sc5 = #{sc5},</if>
+            <if test="re != null">re = #{re},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePredictScById" parameterType="Integer">
+        delete from predict_sc where id = #{id}
+    </delete>
+
+    <delete id="deletePredictScByIds" parameterType="String">
+        delete from predict_sc where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
