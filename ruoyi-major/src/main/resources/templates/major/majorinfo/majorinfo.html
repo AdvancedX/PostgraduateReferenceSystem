@@ -4,93 +4,93 @@
     <th:block th:include="include :: header('专业信息列表')" />
 </head>
 <body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <li>
-                                <label>院校代码：</label>
-                                <input type="text" name="schoolID"/>
-                            </li>
-                            <li>
-                                <label>专业代码：</label>
-                                <input type="text" name="majorID"/>
-                            </li>
-                            <li>
-                                <label>专业名称：</label>
-                                <input type="text" name="major"/>
-                            </li>
-                            <li>
-                                <label>研究方向：</label>
-                                <input type="text" name="researchDirection"/>
-                            </li>
-                            <li>
-                                <label>思想政治：</label>
-                                <input type="text" name="politics"/>
-                            </li>
-                            <li>
-                                <label>外语：</label>
-                                <input type="text" name="language"/>
-                            </li>
-                            <li>
-                                <label>数学：</label>
-                                <input type="text" name="math"/>
-                            </li>
-                            <li>
-                                <label>专业科目：</label>
-                                <input type="text" name="majorSubject"/>
-                            </li>
-                            <li>
-                                <label>复试科目：</label>
-                                <input type="text" name="reSubject"/>
-                            </li>
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>院校代码：</label>
+                            <input type="text" name="schoolID"/>
+                        </li>
+                        <li>
+                            <label>专业代码：</label>
+                            <input type="text" name="majorID"/>
+                        </li>
+                        <li>
+                            <label>专业名称：</label>
+                            <input type="text" name="major"/>
+                        </li>
+                        <li>
+                            <label>研究方向：</label>
+                            <input type="text" name="researchDirection"/>
+                        </li>
+                        <li>
+                            <label>思想政治：</label>
+                            <input type="text" name="politics"/>
+                        </li>
+                        <li>
+                            <label>外语：</label>
+                            <input type="text" name="language"/>
+                        </li>
+                        <li>
+                            <label>数学：</label>
+                            <input type="text" name="math"/>
+                        </li>
+                        <li>
+                            <label>专业科目：</label>
+                            <input type="text" name="majorSubject"/>
+                        </li>
+                        <li>
+                            <label>复试科目：</label>
+                            <input type="text" name="reSubject"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
 
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="map:majorinfo:add">
-                    <i class="fa fa-plus"></i> 添加
-                </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="map:majorinfo:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="map:majorinfo:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="map:majorinfo:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
-            </div>
-            <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
-            </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="major:majorinfo:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="major:majorinfo:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="major:majorinfo:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="major:majorinfo:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('map:majorinfo:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('map:majorinfo:remove')}]];
-        var prefix = ctx + "major/majorinfo";
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('major:majorinfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('major:majorinfo:remove')}]];
+    var prefix = ctx + "major/majorinfo";
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
-                modalName: "专业信息",
-                columns: [{
-                    checkbox: true
-                },
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "专业信息",
+            columns: [{
+                checkbox: true
+            },
                 {
                     field: 'id',
                     title: '主键',
@@ -142,9 +142,9 @@
                         return actions.join('');
                     }
                 }]
-            };
-            $.table.init(options);
-        });
-    </script>
+        };
+        $.table.init(options);
+    });
+</script>
 </body>
 </html>
