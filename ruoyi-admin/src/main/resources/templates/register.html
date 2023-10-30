@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>注册辅助报考系统</title>
-    <meta name="description" content="若依后台管理框架">
     <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
     <link href="../static/css/style.min.css" th:href="@{/css/style.min.css}" rel="stylesheet"/>
@@ -31,7 +30,6 @@
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Thymeleaf</li>
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Bootstrap</li>
                     </ul>
-                    <strong>已经注册过? <a th:href="@{/login}">直接登录&raquo;</a></strong>
                 </div>
             </div>
             <div class="col-sm-5">
@@ -50,17 +48,11 @@
 							</a>
 						</div>
 					</div>
-                    <div class="checkbox-custom" th:classappend="${captchaEnabled==false} ? 'm-t'">
-				        <input type="checkbox" id="acceptTerm" name="acceptTerm"> <label for="acceptTerm">我已阅读并同意</label>
-				        <a href="https://gitee.com/y_project/RuoYi/blob/master/README.md" target="_blank">使用条款</a>
-				    </div>
+                    <div>
+                        <strong>已经注册过? <a th:href="@{/login}">直接登录&raquo;</a></strong>
+                    </div>
                     <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证注册，请稍候...">注册</button>
                 </form>
-            </div>
-        </div>
-        <div class="signup-footer">
-            <div class="pull-left">
-                &copy; 2018-2023 All Rights Reserved. RuoYi <br>
             </div>
         </div>
     </div>

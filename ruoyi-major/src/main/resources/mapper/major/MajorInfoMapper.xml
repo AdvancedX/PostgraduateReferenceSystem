@@ -2,13 +2,13 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.major.mapper.MajorInfoMapper">
+<mapper namespace="com.ruoyi.map.mapper.EcharsMapper">
     
     <resultMap type="MajorInfo" id="MajorInfoResult">
         <result property="id"    column="id"    />
         <result property="schoolID"    column="schoolID"    />
         <result property="majorID"    column="majorID"    />
-        <result property="major"    column="major"    />
+        <result property="map"    column="map"    />
         <result property="researchDirection"    column="researchDirection"    />
         <result property="politics"    column="politics"    />
         <result property="language"    column="language"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMajorInfoVo">
-        select id, schoolID, majorID, major, researchDirection, politics, language, math, majorSubject, reSubject from major_info
+        select id, schoolID, majorID, map, researchDirection, politics, language, math, majorSubject, reSubject from major_info
     </sql>
 
     <select id="selectMajorInfoList" parameterType="MajorInfo" resultMap="MajorInfoResult">
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="schoolID != null  and schoolID != ''"> and schoolID = #{schoolID}</if>
             <if test="majorID != null  and majorID != ''"> and majorID = #{majorID}</if>
-            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="map != null  and map != ''"> and map = #{map}</if>
             <if test="researchDirection != null  and researchDirection != ''"> and researchDirection = #{researchDirection}</if>
             <if test="politics != null  and politics != ''"> and politics = #{politics}</if>
             <if test="language != null  and language != ''"> and language = #{language}</if>
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="schoolID != null">schoolID,</if>
             <if test="majorID != null">majorID,</if>
-            <if test="major != null">major,</if>
+            <if test="map != null">map,</if>
             <if test="researchDirection != null">researchDirection,</if>
             <if test="politics != null">politics,</if>
             <if test="language != null">language,</if>
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="schoolID != null">#{schoolID},</if>
             <if test="majorID != null">#{majorID},</if>
-            <if test="major != null">#{major},</if>
+            <if test="map != null">#{map},</if>
             <if test="researchDirection != null">#{researchDirection},</if>
             <if test="politics != null">#{politics},</if>
             <if test="language != null">#{language},</if>
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="schoolID != null">schoolID = #{schoolID},</if>
             <if test="majorID != null">majorID = #{majorID},</if>
-            <if test="major != null">major = #{major},</if>
+            <if test="map != null">map = #{map},</if>
             <if test="researchDirection != null">researchDirection = #{researchDirection},</if>
             <if test="politics != null">politics = #{politics},</if>
             <if test="language != null">language = #{language},</if>

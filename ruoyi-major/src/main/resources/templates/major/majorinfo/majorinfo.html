@@ -56,16 +56,16 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="major:majorinfo:add">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="map:majorinfo:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="major:majorinfo:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="map:majorinfo:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="major:majorinfo:remove">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="map:majorinfo:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="major:majorinfo:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="map:majorinfo:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
             </div>
@@ -76,8 +76,8 @@
     </div>
     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('major:majorinfo:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('major:majorinfo:remove')}]];
+        var editFlag = [[${@permission.hasPermi('map:majorinfo:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('map:majorinfo:remove')}]];
         var prefix = ctx + "major/majorinfo";
 
         $(function() {

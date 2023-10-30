@@ -212,6 +212,7 @@
         <module>ruoyi-common</module>
         <module>ruoyi-school</module>
         <module>ruoyi-major</module>
+        <module>ruoyi-map</module>
     </modules>
     <packaging>pom</packaging>
 
