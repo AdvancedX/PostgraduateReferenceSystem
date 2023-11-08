@@ -4,9 +4,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.web.filter.AccessControlFilter;
-import com.google.code.kaptcha.Constants;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
 import com.ruoyi.common.constant.ShiroConstants;
-import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
@@ -21,26 +21,17 @@ public class CaptchaValidateFilter extends AccessControlFilter
      */
     private boolean captchaEnabled = true;
 
-    /**
-     * 验证码类型
-     */
-    private String captchaType = "math";
+    private CaptchaService captchaService;
 
     public void setCaptchaEnabled(boolean captchaEnabled)
     {
         this.captchaEnabled = captchaEnabled;
     }
 
-    public void setCaptchaType(String captchaType)
-    {
-        this.captchaType = captchaType;
-    }
-
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception
     {
         request.setAttribute(ShiroConstants.CURRENT_ENABLED, captchaEnabled);
-        request.setAttribute(ShiroConstants.CURRENT_TYPE, captchaType);
         return super.onPreHandle(request, response, mappedValue);
     }
 
@@ -54,16 +45,14 @@ public class CaptchaValidateFilter extends AccessControlFilter
         {
             return true;
         }
-        return validateResponse(httpServletRequest, httpServletRequest.getParameter(ShiroConstants.CURRENT_VALIDATECODE));
+        return validateResponse(httpServletRequest, httpServletRequest.getParameter("__captchaVerification"));
     }
 
-    public boolean validateResponse(HttpServletRequest request, String validateCode)
+    public boolean validateResponse(HttpServletRequest request, String captchaVerification)
     {
-        Object obj = ShiroUtils.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        String code = String.valueOf(obj != null ? obj : "");
-        // 验证码清除，防止多次使用。
-        request.getSession().removeAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (StringUtils.isEmpty(validateCode) || !validateCode.equalsIgnoreCase(code))
+        CaptchaVO captchaVO = new CaptchaVO();
+        captchaVO.setCaptchaVerification(captchaVerification);
+        if (StringUtils.isEmpty(captchaVerification) || !captchaService.verification(captchaVO).isSuccess())
         {
             return false;
         }
@@ -75,5 +64,10 @@ public class CaptchaValidateFilter extends AccessControlFilter
     {
         request.setAttribute(ShiroConstants.CURRENT_CAPTCHA, ShiroConstants.CAPTCHA_ERROR);
         return true;
+    }
+
+    public void setCaptchaService(CaptchaService captchaService)
+    {
+        this.captchaService = captchaService;
     }
 }

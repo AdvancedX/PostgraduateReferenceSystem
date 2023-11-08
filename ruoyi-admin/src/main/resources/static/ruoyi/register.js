@@ -1,33 +1,28 @@
 
 $(function() {
     validateRule();
-    $('.imgcode').click(function() {
-        var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
-        $(".imgcode").attr("src", url);
-    });
+    refreshCode();
 });
 
 $.validator.setDefaults({
     submitHandler: function() {
-    	register();
+    	showVerfyImage();
     }
 });
 
-function register() {
-    $.modal.loading($("#btnSubmit").data("loading"));
-    var username = $.common.trim($("input[name='username']").val());
-    var password = $.common.trim($("input[name='password']").val());
-    var validateCode = $("input[name='validateCode']").val();
+function showVerfyImage() {
+	$("#verfyImg").find(".mask").css("display", "block");
+}
+
+function postRegister(data){
+	$.modal.loading($("#btnSubmit").data("loading"));
     $.ajax({
         type: "post",
         url: ctx + "register",
-        data: {
-            "loginName": username,
-            "password": password,
-            "validateCode": validateCode
-        },
+        data: data,
         success: function(r) {
             if (r.code == web_status.SUCCESS) {
+            	var username = $.common.trim($("input[name='username']").val());
             	layer.alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", {
             	    icon: 1,
             	    title: "系统提示"
@@ -39,12 +34,30 @@ function register() {
             	});
             } else {
             	$.modal.closeLoading();
-            	$('.imgcode').click();
-            	$(".code").val("");
             	$.modal.msg(r.msg);
             }
         }
     });
+}
+
+/* 刷新验证码 */
+function refreshCode() {
+	/** 初始化验证码  弹出式 */
+	$('#verfyImg').slideVerify({
+		baseUrl: ctx,
+		mode: 'pop',
+		success : function(params) {
+			var username = $.common.trim($("input[name='username']").val());
+		    var password = $.common.trim($("input[name='password']").val());
+		    var data = {
+		        "loginName": username,
+		        "password": password
+		    };
+			data = $.extend(data, params);
+			postRegister(data);
+		},
+		error : function() {}
+	});
 }
 
 function validateRule() {

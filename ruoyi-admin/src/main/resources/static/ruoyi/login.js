@@ -2,44 +2,56 @@
 $(function() {
     validateKickout();
     validateRule();
-    $('.imgcode').click(function() {
-        var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
-        $(".imgcode").attr("src", url);
-    });
+    refreshCode();
 });
 
 $.validator.setDefaults({
     submitHandler: function() {
-        login();
+    	showVerfyImage();
     }
 });
 
-function login() {
+function showVerfyImage() {
+	$("#verfyImg").find(".mask").css("display", "block");
+}
+
+function postLogin(data){
     $.modal.loading($("#btnSubmit").data("loading"));
-    var username = $.common.trim($("input[name='username']").val());
-    var password = $.common.trim($("input[name='password']").val());
-    var validateCode = $("input[name='validateCode']").val();
-    var rememberMe = $("input[name='rememberme']").is(':checked');
     $.ajax({
         type: "post",
         url: ctx + "login",
-        data: {
-            "username": username,
-            "password": password,
-            "validateCode": validateCode,
-            "rememberMe": rememberMe
-        },
+        data: data,
         success: function(r) {
             if (r.code == web_status.SUCCESS) {
                 location.href = ctx + 'index';
             } else {
-            	$('.imgcode').click();
-            	$(".code").val("");
             	$.modal.msg(r.msg);
             }
             $.modal.closeLoading();
         }
     });
+}
+
+/* 刷新验证码 */
+function refreshCode() {
+	/** 初始化验证码  弹出式 */
+	$('#verfyImg').slideVerify({
+		baseUrl: ctx,
+		mode: 'pop',
+		success : function(params) {
+			var username = $.common.trim($("input[name='username']").val());
+		    var password = $.common.trim($("input[name='password']").val());
+		    var rememberMe = $("input[name='rememberme']").is(':checked');
+		    var data = {
+		        "username": username,
+		        "password": password,
+		        "rememberMe": rememberMe
+		    };
+			data = $.extend(data, params);
+			postLogin(data);
+		},
+		error : function() {}
+	});
 }
 
 function validateRule() {

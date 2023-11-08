@@ -77,6 +77,13 @@
             <artifactId>ruoyi-system</artifactId>
         </dependency>
 
+        <!-- 滑块验证码  -->
+        <dependency>
+            <groupId>com.github.anji-plus</groupId>
+            <artifactId>captcha-spring-boot-starter</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+
     </dependencies>
 
 </project>
