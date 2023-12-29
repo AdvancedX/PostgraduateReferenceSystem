@@ -11,8 +11,8 @@ import com.ruoyi.common.core.text.Convert;
 /**
  * 院校信息Service业务层处理
  * 
- * @author 许哲睿
- * @date 2023-10-29
+ * @author ruoyi
+ * @date 2023-12-29
  */
 @Service
 public class SchoolInfoServiceImpl implements ISchoolInfoService 
@@ -27,7 +27,7 @@ public class SchoolInfoServiceImpl implements ISchoolInfoService
      * @return 院校信息
      */
     @Override
-    public SchoolInfo selectSchoolInfoById(Integer id)
+    public SchoolInfo selectSchoolInfoById(String id)
     {
         return schoolInfoMapper.selectSchoolInfoById(id);
     }
@@ -87,7 +87,7 @@ public class SchoolInfoServiceImpl implements ISchoolInfoService
      * @return 结果
      */
     @Override
-    public int deleteSchoolInfoById(Integer id)
+    public int deleteSchoolInfoById(String id)
     {
         return schoolInfoMapper.deleteSchoolInfoById(id);
     }

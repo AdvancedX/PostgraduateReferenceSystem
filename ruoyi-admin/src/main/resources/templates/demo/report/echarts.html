@@ -868,8 +868,83 @@
 	
 	        radarChart.setOption(radaroption);
 	        $(window).resize(radarChart.resize);
-	
-	        var mapChart = echarts.init(document.getElementById("echarts-map-chart"));
+
+            var mapChart = echarts.init(document.getElementById("echarts-map-chart"));
+            var mapoption = {
+                title : {
+                    text: '湖南省2022年1-4季度各市州地区生产总值',
+                    subtext: '数源来源国家统计局，单位：亿元',
+                    x:'left'
+                },
+                tooltip : {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    x:'right',
+                    y:'center',
+                    data:['地区生产总值']
+                },
+                dataRange: {
+                    min: 0,
+                    max: 13967,
+                    x: 'left',
+                    y: 'bottom',
+                    text:['高','低'],           // 文本，默认为数值文本
+                    calculable : true
+                },
+                toolbox: {
+                    show: true,
+                    orient : 'vertical',
+                    x: 'right',
+                    y: 'bottom',
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                roamController: {
+                    show: true,
+                    x: 'right',
+                    mapTypeControl: {
+                        'hunan': true
+                    }
+                },
+                eries : [
+                    {
+                        name: '地区生产总值',
+                        type: 'map',
+                        mapType: 'hunan',
+                        roam: false,
+                        zoom:1.2,//视觉比例大小,1.2即为原有大小的1.2倍
+                        itemStyle:{
+                            normal:{label:{show:true}},
+                            emphasis:{label:{show:true}}
+                        },
+                        data:[
+                            {name: '阎良区',value: 13966.11},
+                            {name: '临潼区',value: 3616.81},
+                            {name: '高陵区',value: 2697.54},
+                            {name: '怀化市',value: 1877.64},
+                            {name: '郴州市',value: 2980.49},
+                            {name: '岳阳市',value: 4710.67},
+                            {name: '常德市',value: 4274.52},
+                            {name: '娄底市',value: 1929.5},
+                            {name: '永州市',value: 2410.28},
+                            {name: '邵阳市',value: 2599.18},
+                            {name: '衡阳市',value: 4089.69},
+                            {name: '张家界市',value: 592.39},
+                            {name: '湘西土家族苗族自治州',value: 817.53},
+                            {name: '益阳市',value: 2108.02}
+                        ]
+                    }
+                ]
+            };
+            mapChart.setOption(mapoption);
+            $(window).resize(mapChart.resize);
+            charts.push(mapChart);	        var mapChart = echarts.init(document.getElementById("echarts-map-chart"));
 	        var mapoption = {
 	            title : {
 	                text: 'iphone销量',

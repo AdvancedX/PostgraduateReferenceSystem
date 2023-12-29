@@ -4,77 +4,65 @@
     <th:block th:include="include :: header('修改专业信息')" />
 </head>
 <body class="white-bg">
-<div class="wrapper wrapper-content animated fadeInRight ibox-content">
-    <form class="form-horizontal m" id="form-majorinfo-edit" th:object="${majorInfo}">
-        <input name="id" th:field="*{id}" type="hidden">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">院校代码：</label>
-            <div class="col-sm-8">
-                <input name="schoolID" th:field="*{schoolID}" class="form-control" type="text">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-majorinfo-edit" th:object="${majorInfo}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">院校名称：</label>
+                <div class="col-sm-8">
+                    <input name="school" th:field="*{school}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">专业代码：</label>
-            <div class="col-sm-8">
-                <input name="majorID" th:field="*{majorID}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业名称：</label>
+                <div class="col-sm-8">
+                    <input name="major" th:field="*{major}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">专业名称：</label>
-            <div class="col-sm-8">
-                <input name="major" th:field="*{major}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">研究方向：</label>
+                <div class="col-sm-8">
+                    <input name="researchDirection" th:field="*{researchDirection}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">研究方向：</label>
-            <div class="col-sm-8">
-                <input name="researchDirection" th:field="*{researchDirection}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">思想政治：</label>
+                <div class="col-sm-8">
+                    <input name="politics" th:field="*{politics}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">思想政治：</label>
-            <div class="col-sm-8">
-                <input name="politics" th:field="*{politics}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">外语：</label>
+                <div class="col-sm-8">
+                    <input name="language" th:field="*{language}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">外语：</label>
-            <div class="col-sm-8">
-                <input name="language" th:field="*{language}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业课：</label>
+                <div class="col-sm-8">
+                    <input name="majorsubject1" th:field="*{majorsubject1}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">数学：</label>
-            <div class="col-sm-8">
-                <input name="math" th:field="*{math}" class="form-control" type="text">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业课：</label>
+                <div class="col-sm-8">
+                    <input name="majorSubject2" th:field="*{majorSubject2}" class="form-control" type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">专业科目：</label>
-            <div class="col-sm-8">
-                <input name="majorSubject" th:field="*{majorSubject}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">复试科目：</label>
-            <div class="col-sm-8">
-                <input name="reSubject" th:field="*{reSubject}" class="form-control" type="text">
-            </div>
-        </div>
-    </form>
-</div>
-<th:block th:include="include :: footer" />
-<script th:inline="javascript">
-    var prefix = ctx + "major/majorinfo";
-    $("#form-majorinfo-edit").validate({
-        focusCleanup: true
-    });
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "major/majorinfo";
+        $("#form-majorinfo-edit").validate({
+            focusCleanup: true
+        });
 
-    function submitHandler() {
-        if ($.validate.form()) {
-            $.operate.save(prefix + "/edit", $('#form-majorinfo-edit').serialize());
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-majorinfo-edit').serialize());
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>

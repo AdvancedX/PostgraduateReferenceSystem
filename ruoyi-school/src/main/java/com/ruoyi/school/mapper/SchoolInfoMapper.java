@@ -6,8 +6,8 @@ import com.ruoyi.school.domain.SchoolInfo;
 /**
  * 院校信息Mapper接口
  * 
- * @author 许哲睿
- * @date 2023-10-29
+ * @author ruoyi
+ * @date 2023-12-29
  */
 public interface SchoolInfoMapper 
 {
@@ -17,7 +17,7 @@ public interface SchoolInfoMapper
      * @param id 院校信息主键
      * @return 院校信息
      */
-    public SchoolInfo selectSchoolInfoById(Integer id);
+    public SchoolInfo selectSchoolInfoById(String id);
 
     /**
      * 查询院校信息列表
@@ -49,7 +49,7 @@ public interface SchoolInfoMapper
      * @param id 院校信息主键
      * @return 结果
      */
-    public int deleteSchoolInfoById(Integer id);
+    public int deleteSchoolInfoById(String id);
 
     /**
      * 批量删除院校信息

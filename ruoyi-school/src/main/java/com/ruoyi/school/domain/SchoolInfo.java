@@ -8,19 +8,15 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 院校信息对象 school_info
  * 
- * @author 许哲睿
- * @date 2023-10-29
+ * @author ruoyi
+ * @date 2023-12-29
  */
 public class SchoolInfo extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Integer id;
-
-    /** 院校代码 */
-    @Excel(name = "院校代码")
-    private String schoolid;
+    private String id;
 
     /** 院校名称 */
     @Excel(name = "院校名称")
@@ -34,23 +30,14 @@ public class SchoolInfo extends BaseEntity
     @Excel(name = "地区")
     private String region;
 
-    public void setId(Integer id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Integer getId() 
+    public String getId() 
     {
         return id;
-    }
-    public void setSchoolid(String schoolid) 
-    {
-        this.schoolid = schoolid;
-    }
-
-    public String getSchoolid() 
-    {
-        return schoolid;
     }
     public void setSchool(String school) 
     {
@@ -84,7 +71,6 @@ public class SchoolInfo extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("schoolid", getSchoolid())
             .append("school", getSchool())
             .append("schooltype", getSchooltype())
             .append("region", getRegion())

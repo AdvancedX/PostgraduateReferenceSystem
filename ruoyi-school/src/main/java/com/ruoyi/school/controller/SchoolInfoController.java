@@ -22,8 +22,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 院校信息Controller
  * 
- * @author 许哲睿
- * @date 2023-10-29
+ * @author ruoyi
+ * @date 2023-12-29
  */
 @Controller
 @RequestMapping("/school/schoolinfo")
@@ -94,7 +94,7 @@ public class SchoolInfoController extends BaseController
      */
     @RequiresPermissions("school:schoolinfo:edit")
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
+    public String edit(@PathVariable("id") String id, ModelMap mmap)
     {
         SchoolInfo schoolInfo = schoolInfoService.selectSchoolInfoById(id);
         mmap.put("schoolInfo", schoolInfo);

@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 专业信息Controller
  * 
  * @author 许哲睿
- * @date 2023-10-29
+ * @date 2023-12-24
  */
 @Controller
 @RequestMapping("/major/majorinfo")
@@ -94,7 +94,7 @@ public class MajorInfoController extends BaseController
      */
     @RequiresPermissions("major:majorinfo:edit")
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
+    public String edit(@PathVariable("id") String id, ModelMap mmap)
     {
         MajorInfo majorInfo = majorInfoService.selectMajorInfoById(id);
         mmap.put("majorInfo", majorInfo);

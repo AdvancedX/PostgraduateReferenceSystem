@@ -7,7 +7,7 @@ import com.ruoyi.major.domain.MajorInfo;
  * 专业信息Service接口
  * 
  * @author 许哲睿
- * @date 2023-10-29
+ * @date 2023-12-24
  */
 public interface IMajorInfoService 
 {
@@ -17,7 +17,7 @@ public interface IMajorInfoService
      * @param id 专业信息主键
      * @return 专业信息
      */
-    public MajorInfo selectMajorInfoById(Integer id);
+    public MajorInfo selectMajorInfoById(String id);
 
     /**
      * 查询专业信息列表
@@ -57,5 +57,5 @@ public interface IMajorInfoService
      * @param id 专业信息主键
      * @return 结果
      */
-    public int deleteMajorInfoById(Integer id);
+    public int deleteMajorInfoById(String id);
 }

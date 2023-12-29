@@ -9,22 +9,18 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 专业信息对象 major_info
  * 
  * @author 许哲睿
- * @date 2023-10-29
+ * @date 2023-12-24
  */
 public class MajorInfo extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Integer id;
+    private String id;
 
-    /** 院校代码 */
-    @Excel(name = "院校代码")
-    private String schoolID;
-
-    /** 专业代码 */
-    @Excel(name = "专业代码")
-    private String majorID;
+    /** 院校名称 */
+    @Excel(name = "院校名称")
+    private String school;
 
     /** 专业名称 */
     @Excel(name = "专业名称")
@@ -42,44 +38,31 @@ public class MajorInfo extends BaseEntity
     @Excel(name = "外语")
     private String language;
 
-    /** 数学 */
-    @Excel(name = "数学")
-    private String math;
+    /** 专业课（1） */
+    @Excel(name = "专业课", readConverterExp = "1=")
+    private String majorsubject1;
 
-    /** 专业科目 */
-    @Excel(name = "专业科目")
-    private String majorSubject;
+    /** 专业课（2） */
+    @Excel(name = "专业课", readConverterExp = "2=")
+    private String majorSubject2;
 
-    /** 复试科目 */
-    @Excel(name = "复试科目")
-    private String reSubject;
-
-    public void setId(Integer id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Integer getId() 
+    public String getId() 
     {
         return id;
     }
-    public void setSchoolID(String schoolID) 
+    public void setSchool(String school) 
     {
-        this.schoolID = schoolID;
+        this.school = school;
     }
 
-    public String getSchoolID() 
+    public String getSchool() 
     {
-        return schoolID;
-    }
-    public void setMajorID(String majorID) 
-    {
-        this.majorID = majorID;
-    }
-
-    public String getMajorID() 
-    {
-        return majorID;
+        return school;
     }
     public void setMajor(String major) 
     {
@@ -117,47 +100,36 @@ public class MajorInfo extends BaseEntity
     {
         return language;
     }
-    public void setMath(String math) 
+    public void setMajorsubject1(String majorsubject1) 
     {
-        this.math = math;
+        this.majorsubject1 = majorsubject1;
     }
 
-    public String getMath() 
+    public String getMajorsubject1() 
     {
-        return math;
+        return majorsubject1;
     }
-    public void setMajorSubject(String majorSubject) 
+    public void setMajorSubject2(String majorSubject2) 
     {
-        this.majorSubject = majorSubject;
-    }
-
-    public String getMajorSubject() 
-    {
-        return majorSubject;
-    }
-    public void setReSubject(String reSubject) 
-    {
-        this.reSubject = reSubject;
+        this.majorSubject2 = majorSubject2;
     }
 
-    public String getReSubject() 
+    public String getMajorSubject2() 
     {
-        return reSubject;
+        return majorSubject2;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("schoolID", getSchoolID())
-            .append("majorID", getMajorID())
+            .append("school", getSchool())
             .append("major", getMajor())
             .append("researchDirection", getResearchDirection())
             .append("politics", getPolitics())
             .append("language", getLanguage())
-            .append("math", getMath())
-            .append("majorSubject", getMajorSubject())
-            .append("reSubject", getReSubject())
+            .append("majorsubject1", getMajorsubject1())
+            .append("majorSubject2", getMajorSubject2())
             .toString();
     }
 }

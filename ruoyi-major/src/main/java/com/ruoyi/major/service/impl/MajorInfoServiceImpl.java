@@ -12,7 +12,7 @@ import com.ruoyi.common.core.text.Convert;
  * 专业信息Service业务层处理
  * 
  * @author 许哲睿
- * @date 2023-10-29
+ * @date 2023-12-24
  */
 @Service
 public class MajorInfoServiceImpl implements IMajorInfoService 
@@ -27,7 +27,7 @@ public class MajorInfoServiceImpl implements IMajorInfoService
      * @return 专业信息
      */
     @Override
-    public MajorInfo selectMajorInfoById(Integer id)
+    public MajorInfo selectMajorInfoById(String id)
     {
         return majorInfoMapper.selectMajorInfoById(id);
     }
@@ -87,7 +87,7 @@ public class MajorInfoServiceImpl implements IMajorInfoService
      * @return 结果
      */
     @Override
-    public int deleteMajorInfoById(Integer id)
+    public int deleteMajorInfoById(String id)
     {
         return majorInfoMapper.deleteMajorInfoById(id);
     }
