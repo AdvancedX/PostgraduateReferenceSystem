@@ -85,6 +85,12 @@
             <artifactId>ruoyi-presc</artifactId>
         </dependency>
 
+        <!-- 专业信息-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-score</artifactId>
+        </dependency>
+
 
     </dependencies>
 
