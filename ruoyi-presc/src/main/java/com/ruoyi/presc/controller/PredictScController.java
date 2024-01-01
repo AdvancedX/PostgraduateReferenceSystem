@@ -1,14 +1,6 @@
 package com.ruoyi.presc.controller;
 
 import java.util.List;
-
-import org.apache.commons.math3.analysis.ParametricUnivariateFunction;
-import org.apache.commons.math3.fitting.WeightedObservedPoints;
-import org.apache.commons.math3.fitting.leastsquares.LeastSquaresBuilder;
-import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
-import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
-import org.apache.commons.math3.fitting.leastsquares.MultivariateJacobianFunction;
-import org.apache.commons.math3.linear.RealVector;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,8 +22,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 分数预测Controller
  * 
- * @author ruoyi
- * @date 2023-10-30
+ * @author 许哲睿
+ * @date 2024-01-01
  */
 @Controller
 @RequestMapping("/presc/presc")
@@ -94,8 +86,6 @@ public class PredictScController extends BaseController
     @ResponseBody
     public AjaxResult addSave(PredictSc predictSc)
     {
-        Double PredictValue=predictSc.PredictValue(predictSc.getSc1(), predictSc.getSc2(), predictSc.getSc3(), predictSc.getSc4(), predictSc.getSc5());
-        predictSc.setRe(PredictValue);
         return toAjax(predictScService.insertPredictSc(predictSc));
     }
 
@@ -103,10 +93,10 @@ public class PredictScController extends BaseController
      * 修改分数预测
      */
     @RequiresPermissions("presc:presc:edit")
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
+    @GetMapping("/edit/{major}")
+    public String edit(@PathVariable("major") String major, ModelMap mmap)
     {
-        PredictSc predictSc = predictScService.selectPredictScById(id);
+        PredictSc predictSc = predictScService.selectPredictScByMajor(major);
         mmap.put("predictSc", predictSc);
         return prefix + "/edit";
     }
@@ -132,6 +122,6 @@ public class PredictScController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(predictScService.deletePredictScByIds(ids));
+        return toAjax(predictScService.deletePredictScByMajors(ids));
     }
 }

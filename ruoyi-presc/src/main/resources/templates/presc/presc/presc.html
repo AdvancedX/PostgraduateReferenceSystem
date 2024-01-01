@@ -11,24 +11,12 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <label>第一年录取分数：</label>
-                                <input type="text" name="sc1"/>
+                                <label>专业名称：</label>
+                                <input type="text" name="major"/>
                             </li>
                             <li>
-                                <label>第二年录取分数：</label>
-                                <input type="text" name="sc2"/>
-                            </li>
-                            <li>
-                                <label>第三年录取分数：</label>
-                                <input type="text" name="sc3"/>
-                            </li>
-                            <li>
-                                <label>第四年录取分数：</label>
-                                <input type="text" name="sc4"/>
-                            </li>
-                            <li>
-                                <label>第五年录取分数：</label>
-                                <input type="text" name="sc5"/>
+                                <label>分数：</label>
+                                <input type="text" name="score"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -76,41 +64,20 @@
                     checkbox: true
                 },
                 {
-                    field: 'id',
-                    title: '主键',
-                    visible: false
+                    field: 'major',
+                    title: '专业名称'
                 },
                 {
-                    field: 'sc1',
-                    title: '第一年录取分数'
-                },
-                {
-                    field: 'sc2',
-                    title: '第二年录取分数'
-                },
-                {
-                    field: 'sc3',
-                    title: '第三年录取分数'
-                },
-                {
-                    field: 'sc4',
-                    title: '第四年录取分数'
-                },
-                {
-                    field: 'sc5',
-                    title: '第五年录取分数'
-                },
-                {
-                    field: 're',
-                    title: '预测分数'
+                    field: 'score',
+                    title: '分数'
                 },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.major + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.major + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]

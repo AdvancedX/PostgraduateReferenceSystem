@@ -11,8 +11,8 @@ import com.ruoyi.common.core.text.Convert;
 /**
  * 分数预测Service业务层处理
  * 
- * @author ruoyi
- * @date 2023-10-30
+ * @author 许哲睿
+ * @date 2024-01-01
  */
 @Service
 public class PredictScServiceImpl implements IPredictScService 
@@ -23,13 +23,13 @@ public class PredictScServiceImpl implements IPredictScService
     /**
      * 查询分数预测
      * 
-     * @param id 分数预测主键
+     * @param major 分数预测主键
      * @return 分数预测
      */
     @Override
-    public PredictSc selectPredictScById(Integer id)
+    public PredictSc selectPredictScByMajor(String major)
     {
-        return predictScMapper.selectPredictScById(id);
+        return predictScMapper.selectPredictScByMajor(major);
     }
 
     /**
@@ -71,24 +71,24 @@ public class PredictScServiceImpl implements IPredictScService
     /**
      * 批量删除分数预测
      * 
-     * @param ids 需要删除的分数预测主键
+     * @param majors 需要删除的分数预测主键
      * @return 结果
      */
     @Override
-    public int deletePredictScByIds(String ids)
+    public int deletePredictScByMajors(String majors)
     {
-        return predictScMapper.deletePredictScByIds(Convert.toStrArray(ids));
+        return predictScMapper.deletePredictScByMajors(Convert.toStrArray(majors));
     }
 
     /**
      * 删除分数预测信息
      * 
-     * @param id 分数预测主键
+     * @param major 分数预测主键
      * @return 结果
      */
     @Override
-    public int deletePredictScById(Integer id)
+    public int deletePredictScByMajor(String major)
     {
-        return predictScMapper.deletePredictScById(id);
+        return predictScMapper.deletePredictScByMajor(major);
     }
 }

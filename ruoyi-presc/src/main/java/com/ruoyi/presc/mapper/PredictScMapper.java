@@ -6,18 +6,18 @@ import com.ruoyi.presc.domain.PredictSc;
 /**
  * 分数预测Mapper接口
  * 
- * @author ruoyi
- * @date 2023-10-30
+ * @author 许哲睿
+ * @date 2024-01-01
  */
 public interface PredictScMapper 
 {
     /**
      * 查询分数预测
      * 
-     * @param id 分数预测主键
+     * @param major 分数预测主键
      * @return 分数预测
      */
-    public PredictSc selectPredictScById(Integer id);
+    public PredictSc selectPredictScByMajor(String major);
 
     /**
      * 查询分数预测列表
@@ -46,16 +46,16 @@ public interface PredictScMapper
     /**
      * 删除分数预测
      * 
-     * @param id 分数预测主键
+     * @param major 分数预测主键
      * @return 结果
      */
-    public int deletePredictScById(Integer id);
+    public int deletePredictScByMajor(String major);
 
     /**
      * 批量删除分数预测
      * 
-     * @param ids 需要删除的数据主键集合
+     * @param majors 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePredictScByIds(String[] ids);
+    public int deletePredictScByMajors(String[] majors);
 }
