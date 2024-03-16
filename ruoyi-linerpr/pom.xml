@@ -9,7 +9,7 @@
         <version>4.7.7</version>
     </parent>
 
-    <artifactId>ruoyi-presc</artifactId>
+    <artifactId>ruoyi-linerpr</artifactId>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
@@ -18,31 +18,16 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ai.djl</groupId>
-            <artifactId>api</artifactId>
-            <version>0.18.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ai.djl.pytorch</groupId>
-            <artifactId>pytorch-engine</artifactId>
-            <version>0.18.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ai.djl</groupId>
-            <artifactId>api</artifactId>
-            <version>0.16.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

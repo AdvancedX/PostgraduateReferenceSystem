@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.linerpr.mapper.LinerprMapper">
+    
+    <resultMap type="Linerpr" id="LinerprResult">
+        <result property="sc1"    column="sc1"    />
+        <result property="sc2"    column="sc2"    />
+        <result property="sc3"    column="sc3"    />
+        <result property="sc4"    column="sc4"    />
+        <result property="sc5"    column="sc5"    />
+        <result property="re"    column="re"    />
+    </resultMap>
+
+    <sql id="selectLinerprVo">
+        select sc1, sc2, sc3, sc4, sc5, re from linerpr
+    </sql>
+
+    <select id="selectLinerprList" parameterType="Linerpr" resultMap="LinerprResult">
+        <include refid="selectLinerprVo"/>
+        <where>  
+            <if test="sc1 != null "> and sc1 = #{sc1}</if>
+            <if test="sc2 != null "> and sc2 = #{sc2}</if>
+            <if test="sc3 != null "> and sc3 = #{sc3}</if>
+            <if test="sc4 != null "> and sc4 = #{sc4}</if>
+            <if test="sc5 != null "> and sc5 = #{sc5}</if>
+            <if test="re != null "> and re = #{re}</if>
+        </where>
+    </select>
+    
+    <select id="selectLinerprBySc1" parameterType="Integer" resultMap="LinerprResult">
+        <include refid="selectLinerprVo"/>
+        where sc1 = #{sc1}
+    </select>
+        
+    <insert id="insertLinerpr" parameterType="Linerpr">
+        insert into linerpr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sc1 != null">sc1,</if>
+            <if test="sc2 != null">sc2,</if>
+            <if test="sc3 != null">sc3,</if>
+            <if test="sc4 != null">sc4,</if>
+            <if test="sc5 != null">sc5,</if>
+            <if test="re != null">re,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sc1 != null">#{sc1},</if>
+            <if test="sc2 != null">#{sc2},</if>
+            <if test="sc3 != null">#{sc3},</if>
+            <if test="sc4 != null">#{sc4},</if>
+            <if test="sc5 != null">#{sc5},</if>
+            <if test="re != null">#{re},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLinerpr" parameterType="Linerpr">
+        update linerpr
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sc2 != null">sc2 = #{sc2},</if>
+            <if test="sc3 != null">sc3 = #{sc3},</if>
+            <if test="sc4 != null">sc4 = #{sc4},</if>
+            <if test="sc5 != null">sc5 = #{sc5},</if>
+            <if test="re != null">re = #{re},</if>
+        </trim>
+        where sc1 = #{sc1}
+    </update>
+
+    <delete id="deleteLinerprBySc1" parameterType="Integer">
+        delete from linerpr where sc1 = #{sc1}
+    </delete>
+
+    <delete id="deleteLinerprBySc1s" parameterType="String">
+        delete from linerpr where sc1 in 
+        <foreach item="sc1" collection="array" open="(" separator="," close=")">
+            #{sc1}
+        </foreach>
+    </delete>
+
+</mapper>

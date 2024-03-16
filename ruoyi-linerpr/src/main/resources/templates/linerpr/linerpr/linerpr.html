@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('线性回归预测列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>分数1：</label>
+                                <input type="text" name="sc1"/>
+                            </li>
+                            <li>
+                                <label>分数2：</label>
+                                <input type="text" name="sc2"/>
+                            </li>
+                            <li>
+                                <label>分数3：</label>
+                                <input type="text" name="sc3"/>
+                            </li>
+                            <li>
+                                <label>分数4：</label>
+                                <input type="text" name="sc4"/>
+                            </li>
+                            <li>
+                                <label>分数5：</label>
+                                <input type="text" name="sc5"/>
+                            </li>
+                            <li>
+                                <label>预测分数：</label>
+                                <input type="text" name="re"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <li>
+                            线性回归的工作原理很简单。它假设我们要预测的东西（例如考研分数）和我们已知的信息（例如学习时间、上次的考试分数等）之间存在直线关系。这就好比我们在图纸上画了一条直线，这条线就能帮我们预测未来的分数。
+                            </li>
+                            <li>
+                                我们使用已有的数据（例如以前的考研分数和学习时间）来确定这条直线的位置和倾斜角度。然后，当我们有新的信息（例如新的学习时间）时，我们就可以用这条直线来预测新的考研分数。
+                            </li>
+                            <li>
+                                线性回归的优点是简单易懂，计算速度快。但是，它的一个缺点是它假设所有的信息都是直线关系，这在现实中可能并不总是成立。所以，虽然线性回归是一个非常有用的工具，但我们在使用它时也需要谨慎。
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="linerpr:linerpr:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="linerpr:linerpr:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="linerpr:linerpr:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="linerpr:linerpr:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('linerpr:linerpr:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('linerpr:linerpr:remove')}]];
+        var prefix = ctx + "linerpr/linerpr";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "线性回归预测",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'sc1',
+                    title: '第一年录取分数'
+                },
+                {
+                    field: 'sc2',
+                    title: '第二年录取分数'
+                },
+                {
+                    field: 'sc3',
+                    title: '第三年录取分数'
+                },
+                {
+                    field: 'sc4',
+                    title: '第四年录取分数'
+                },
+                {
+                    field: 'sc5',
+                    title: '第五年录取分数'
+                },
+                {
+                    field: 're',
+                    title: '预测最新一年录取分数'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.sc1 + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

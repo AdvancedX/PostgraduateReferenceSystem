@@ -91,6 +91,10 @@
             <artifactId>ruoyi-score</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-linerpr</artifactId>
+        </dependency>
 
     </dependencies>
 

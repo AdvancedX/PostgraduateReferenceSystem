@@ -202,6 +202,7 @@
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-presc</artifactId>
                 <version>4.7.7</version>
+
             </dependency>
 
             <!-- 分数信息-->
@@ -211,7 +212,12 @@
                 <version>4.7.7</version>
             </dependency>
 
-
+            <!-- 线性回归预测-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-linerpr</artifactId>
+                <version>4.7.7</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -226,6 +232,7 @@
         <module>ruoyi-major</module>
         <module>ruoyi-presc</module>
         <module>ruoyi-score</module>
+        <module>ruoyi-linerpr</module>
     </modules>
     <packaging>pom</packaging>
 

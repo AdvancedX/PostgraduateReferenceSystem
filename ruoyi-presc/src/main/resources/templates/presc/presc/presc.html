@@ -22,6 +22,18 @@
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
+                            <li>
+                                Transformer是一种非常强大的预测模型，它在许多任务中都表现出了出色的性能，例如ChatGPT就是使用Transformer训练的，它也可以用来预测考研分数。
+                            </li>
+                            <li>
+                                Transformer的工作原理是通过“注意力”机制来处理信息。就好像在阅读一本书时，我们可能会更关注一些重要的信息，而忽略一些不那么重要的信息。Transformer就是通过这种方式来处理我们给它的数据（比如学习时间、上次的考试分数等）。
+                            </li>
+                            <li>
+                                Transformer的优点是它可以处理非常复杂的信息，而且它不需要假设信息之间的关系是简单的直线关系。这意味着，即使考研分数和我们的数据之间的关系非常复杂，Transformer也可能能够找到这种关系。
+                            </li>
+                            <li>
+                                然而，Transformer也有一些缺点。首先，它需要大量的数据来训练，。同时也需要更多的时间与资源来处理数据。我们已经初步训练了一些热门专业的录取分数线供你参考
+                            </li>
                         </ul>
                     </div>
                 </form>
@@ -76,7 +88,6 @@
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.major + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.major + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
