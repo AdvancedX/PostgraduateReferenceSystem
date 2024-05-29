@@ -3,16 +3,16 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.pgs</groupId>
+    <artifactId>pgs</artifactId>
     <version>4.7.7</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
+    <name>pgs</name>
+    <url>http://www.pgs.vip</url>
     <description>若依管理系统</description>
     
     <properties>
-        <ruoyi.version>4.7.7</ruoyi.version>
+        <pgs.version>4.7.7</pgs.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -150,89 +150,89 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>generator</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>framework</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>system</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>common</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 院校信息-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-school</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.pgs</groupId>
+                <artifactId>school</artifactId>
+                <version>${pgs.version}</version>
             </dependency>
 
             <!-- 院校信息-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-major</artifactId>
+                <groupId>com.pgs</groupId>
+                <artifactId>major</artifactId>
                 <version>4.7.7</version>
             </dependency>
 
             <!-- 院校信息-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-presc</artifactId>
+                <groupId>com.pgs</groupId>
+                <artifactId>presc</artifactId>
                 <version>4.7.7</version>
 
             </dependency>
 
             <!-- 分数信息-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-score</artifactId>
+                <groupId>com.pgs</groupId>
+                <artifactId>score</artifactId>
                 <version>4.7.7</version>
             </dependency>
 
             <!-- 线性回归预测-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-linerpr</artifactId>
+                <groupId>com.pgs</groupId>
+                <artifactId>linerpr</artifactId>
                 <version>4.7.7</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
-        <module>ruoyi-school</module>
-        <module>ruoyi-major</module>
-        <module>ruoyi-presc</module>
-        <module>ruoyi-score</module>
-        <module>ruoyi-linerpr</module>
+        <module>admin</module>
+        <module>framework</module>
+        <module>system</module>
+        <module>quartz</module>
+        <module>generator</module>
+        <module>common</module>
+        <module>school</module>
+        <module>major</module>
+        <module>presc</module>
+        <module>score</module>
+        <module>linerpr</module>
     </modules>
     <packaging>pom</packaging>
 

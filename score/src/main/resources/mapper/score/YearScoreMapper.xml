@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pgs.score.mapper.YearScoreMapper">
+    
+    <resultMap type="YearScore" id="YearScoreResult">
+        <result property="year"    column="year"    />
+        <result property="school"    column="school"    />
+        <result property="majorId"    column="major_id"    />
+        <result property="major"    column="major"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectYearScoreVo">
+        select year, school, major_id, major, score from year_score
+    </sql>
+
+    <select id="selectYearScoreList" parameterType="YearScore" resultMap="YearScoreResult">
+        <include refid="selectYearScoreVo"/>
+        <where>  
+            <if test="year != null  and year != ''"> and year = #{year}</if>
+            <if test="school != null  and school != ''"> and school like concat('%', #{school}, '%')</if>
+            <if test="majorId != null  and majorId != ''"> and major_id = #{majorId}</if>
+            <if test="major != null  and major != ''"> and major like concat('%', #{major}, '%')</if>
+            <if test="score != null  and score != ''"> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectYearScoreByYear" parameterType="String" resultMap="YearScoreResult">
+        <include refid="selectYearScoreVo"/>
+        where year = #{year}
+    </select>
+        
+    <insert id="insertYearScore" parameterType="YearScore">
+        insert into year_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null and year != ''">year,</if>
+            <if test="school != null and school != ''">school,</if>
+            <if test="majorId != null and majorId != ''">major_id,</if>
+            <if test="major != null and major != ''">major,</if>
+            <if test="score != null and score != ''">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null and year != ''">#{year},</if>
+            <if test="school != null and school != ''">#{school},</if>
+            <if test="majorId != null and majorId != ''">#{majorId},</if>
+            <if test="major != null and major != ''">#{major},</if>
+            <if test="score != null and score != ''">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYearScore" parameterType="YearScore">
+        update year_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="school != null and school != ''">school = #{school},</if>
+            <if test="majorId != null and majorId != ''">major_id = #{majorId},</if>
+            <if test="major != null and major != ''">major = #{major},</if>
+            <if test="score != null and score != ''">score = #{score},</if>
+        </trim>
+        where year = #{year}
+    </update>
+
+    <delete id="deleteYearScoreByYear" parameterType="String">
+        delete from year_score where year = #{year}
+    </delete>
+
+    <delete id="deleteYearScoreByYears" parameterType="String">
+        delete from year_score where year in 
+        <foreach item="year" collection="array" open="(" separator="," close=")">
+            #{year}
+        </foreach>
+    </delete>
+
+</mapper>

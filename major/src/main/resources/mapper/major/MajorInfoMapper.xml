@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pgs.major.mapper.MajorInfoMapper">
+    
+    <resultMap type="MajorInfo" id="MajorInfoResult">
+        <result property="id"    column="id"    />
+        <result property="school"    column="school"    />
+        <result property="major"    column="major"    />
+        <result property="researchDirection"    column="researchDirection"    />
+        <result property="politics"    column="politics"    />
+        <result property="language"    column="language"    />
+        <result property="majorsubject1"    column="majorsubject1"    />
+        <result property="majorSubject2"    column="majorSubject2"    />
+    </resultMap>
+
+    <sql id="selectMajorInfoVo">
+        select id, school, major, researchDirection, politics, language, majorsubject1, majorSubject2 from major_info
+    </sql>
+
+    <select id="selectMajorInfoList" parameterType="MajorInfo" resultMap="MajorInfoResult">
+        <include refid="selectMajorInfoVo"/>
+        <where>  
+            <if test="school != null  and school != ''"> and school like concat('%', #{school}, '%')</if>
+            <if test="major != null  and major != ''"> and major like concat('%', #{major}, '%')</if>
+            <if test="researchDirection != null  and researchDirection != ''"> and researchDirection like concat('%', #{researchDirection}, '%')</if>
+            <if test="politics != null  and politics != ''"> and politics like concat('%', #{politics}, '%')</if>
+            <if test="language != null  and language != ''"> and language like concat('%', #{language}, '%')</if>
+            <if test="majorsubject1 != null  and majorsubject1 != ''"> and majorsubject1 like concat('%', #{majorsubject1}, '%')</if>
+            <if test="majorSubject2 != null  and majorSubject2 != ''"> and majorSubject2 like concat('%', #{majorSubject2}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMajorInfoById" parameterType="String" resultMap="MajorInfoResult">
+        <include refid="selectMajorInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMajorInfo" parameterType="MajorInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into major_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="school != null">school,</if>
+            <if test="major != null">major,</if>
+            <if test="researchDirection != null">researchDirection,</if>
+            <if test="politics != null">politics,</if>
+            <if test="language != null">language,</if>
+            <if test="majorsubject1 != null">majorsubject1,</if>
+            <if test="majorSubject2 != null">majorSubject2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="school != null">#{school},</if>
+            <if test="major != null">#{major},</if>
+            <if test="researchDirection != null">#{researchDirection},</if>
+            <if test="politics != null">#{politics},</if>
+            <if test="language != null">#{language},</if>
+            <if test="majorsubject1 != null">#{majorsubject1},</if>
+            <if test="majorSubject2 != null">#{majorSubject2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMajorInfo" parameterType="MajorInfo">
+        update major_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="school != null">school = #{school},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="researchDirection != null">researchDirection = #{researchDirection},</if>
+            <if test="politics != null">politics = #{politics},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="majorsubject1 != null">majorsubject1 = #{majorsubject1},</if>
+            <if test="majorSubject2 != null">majorSubject2 = #{majorSubject2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMajorInfoById" parameterType="String">
+        delete from major_info where id = #{id}
+    </delete>
+
+    <delete id="deleteMajorInfoByIds" parameterType="String">
+        delete from major_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

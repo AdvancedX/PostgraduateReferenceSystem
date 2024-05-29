@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pgs.presc.mapper.PredictScMapper">
+    
+    <resultMap type="PredictSc" id="PredictScResult">
+        <result property="id"    column="id"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectPredictScVo">
+        select id, score from predict_sc
+    </sql>
+
+    <select id="selectPredictScList" parameterType="PredictSc" resultMap="PredictScResult">
+        <include refid="selectPredictScVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="score != null  and score != ''"> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectPredictScById" parameterType="Long" resultMap="PredictScResult">
+        <include refid="selectPredictScVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPredictSc" parameterType="PredictSc" useGeneratedKeys="true" keyProperty="id">
+        insert into predict_sc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="score != null">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="score != null">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePredictSc" parameterType="PredictSc">
+        update predict_sc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="score != null">score = #{score},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePredictScById" parameterType="Long">
+        delete from predict_sc where id = #{id}
+    </delete>
+
+    <delete id="deletePredictScByIds" parameterType="String">
+        delete from predict_sc where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
