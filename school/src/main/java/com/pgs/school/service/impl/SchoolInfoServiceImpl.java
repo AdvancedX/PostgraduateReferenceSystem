@@ -11,8 +11,8 @@ import com.pgs.common.core.text.Convert;
 /**
  * 院校信息Service业务层处理
  * 
- * @author pgs
- * @date 2023-12-29
+ * @author 许哲睿
+ * @date 2024-06-23
  */
 @Service
 public class SchoolInfoServiceImpl implements ISchoolInfoService 

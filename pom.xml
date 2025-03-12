@@ -9,7 +9,7 @@
 
     <name>pgs</name>
     <url>http://www.pgs.vip</url>
-    <description>若依管理系统</description>
+    <description>辅助报考系统</description>
     
     <properties>
         <pgs.version>4.7.7</pgs.version>
@@ -212,6 +212,12 @@
                 <version>4.7.7</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.pgs</groupId>
+                <artifactId>blogs</artifactId>
+                <version>4.7.7</version>
+            </dependency>
+
             <!-- 线性回归预测-->
             <dependency>
                 <groupId>com.pgs</groupId>
@@ -233,6 +239,7 @@
         <module>presc</module>
         <module>score</module>
         <module>linerpr</module>
+        <module>blogs</module>
     </modules>
     <packaging>pom</packaging>
 

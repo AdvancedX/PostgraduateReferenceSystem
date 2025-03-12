@@ -7,17 +7,17 @@ import com.pgs.score.domain.YearScore;
  * 历年分数Mapper接口
  * 
  * @author 许哲睿
- * @date 2023-12-30
+ * @date 2024-06-23
  */
 public interface YearScoreMapper 
 {
     /**
      * 查询历年分数
      * 
-     * @param year 历年分数主键
+     * @param id 历年分数主键
      * @return 历年分数
      */
-    public YearScore selectYearScoreByYear(String year);
+    public YearScore selectYearScoreById(Long id);
 
     /**
      * 查询历年分数列表
@@ -46,16 +46,16 @@ public interface YearScoreMapper
     /**
      * 删除历年分数
      * 
-     * @param year 历年分数主键
+     * @param id 历年分数主键
      * @return 结果
      */
-    public int deleteYearScoreByYear(String year);
+    public int deleteYearScoreById(Long id);
 
     /**
      * 批量删除历年分数
      * 
-     * @param years 需要删除的数据主键集合
+     * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteYearScoreByYears(String[] years);
+    public int deleteYearScoreByIds(String[] ids);
 }

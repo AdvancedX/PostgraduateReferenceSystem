@@ -1,0 +1,14 @@
+<div class="btn-group-sm" id="toolbar" role="group">
+    <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="blogs:blogs:add">
+        <i class="fa fa-plus"></i> 添加
+    </a>
+    <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="blogs:blogs:edit">
+        <i class="fa fa-edit"></i> 修改
+    </a>
+    <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="blogs:blogs:remove">
+        <i class="fa fa-remove"></i> 删除
+    </a>
+    <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="blogs:blogs:export">
+        <i class="fa fa-download"></i> 导出
+    </a>
+</div>

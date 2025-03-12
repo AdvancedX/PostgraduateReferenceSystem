@@ -23,7 +23,7 @@ import com.pgs.common.core.page.TableDataInfo;
  * 历年分数Controller
  * 
  * @author 许哲睿
- * @date 2023-12-30
+ * @date 2024-06-23
  */
 @Controller
 @RequestMapping("/score/score")
@@ -93,10 +93,10 @@ public class YearScoreController extends BaseController
      * 修改历年分数
      */
     @RequiresPermissions("score:score:edit")
-    @GetMapping("/edit/{year}")
-    public String edit(@PathVariable("year") String year, ModelMap mmap)
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
     {
-        YearScore yearScore = yearScoreService.selectYearScoreByYear(year);
+        YearScore yearScore = yearScoreService.selectYearScoreById(id);
         mmap.put("yearScore", yearScore);
         return prefix + "/edit";
     }
@@ -122,6 +122,6 @@ public class YearScoreController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(yearScoreService.deleteYearScoreByYears(ids));
+        return toAjax(yearScoreService.deleteYearScoreByIds(ids));
     }
 }

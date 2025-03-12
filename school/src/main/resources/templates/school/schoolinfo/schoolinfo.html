@@ -54,6 +54,7 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('school:schoolinfo:edit')}]];
         var removeFlag = [[${@permission.hasPermi('school:schoolinfo:remove')}]];
+        var schooltypeDatas = [[${@dict.getType('schoolinfo_schooltype')}]];
         var prefix = ctx + "school/schoolinfo";
 
         $(function() {
@@ -78,7 +79,10 @@
                 },
                 {
                     field: 'schooltype',
-                    title: '院校类型'
+                    title: '院校类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(schooltypeDatas, value);
+                    }
                 },
                 {
                     field: 'region',

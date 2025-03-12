@@ -77,7 +77,7 @@ public class DemoTableController extends BaseController
         areas.add(new AreaModel(8, 0, "贵州省", "520000", "GZS", "GuiZhouSheng", 0));
         areas.add(new AreaModel(9,  0, "上海市", "310000", "SHS", "ShangHaiShi", 0));
         areas.add(new AreaModel(10, 0, "重庆市", "500000", "CQS", "ChongQingShi", 0));
-        areas.add(new AreaModel(11, 0, "若依省", "666666", "YYS", "pgsSheng", 0));
+        areas.add(new AreaModel(11, 0, "PGS省", "666666", "YYS", "pgsSheng", 0));
         areas.add(new AreaModel(12, 0, "安徽省", "340000", "AHS", "AnHuiSheng", 0));
         areas.add(new AreaModel(13, 0, "福建省", "350000", "FJS", "FuJianSheng", 0));
         areas.add(new AreaModel(14, 0, "海南省", "460000", "HNS", "HaiNanSheng", 0));

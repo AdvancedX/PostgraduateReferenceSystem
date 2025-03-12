@@ -1,15 +1,15 @@
 package com.pgs.school.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.pgs.common.annotation.Excel;
 import com.pgs.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 院校信息对象 school_info
  * 
- * @author pgs
- * @date 2023-12-29
+ * @author 许哲睿
+ * @date 2024-06-23
  */
 public class SchoolInfo extends BaseEntity
 {
@@ -24,7 +24,7 @@ public class SchoolInfo extends BaseEntity
 
     /** 院校类型 */
     @Excel(name = "院校类型")
-    private String schooltype;
+    private Integer schooltype;
 
     /** 地区 */
     @Excel(name = "地区")
@@ -48,12 +48,12 @@ public class SchoolInfo extends BaseEntity
     {
         return school;
     }
-    public void setSchooltype(String schooltype) 
+    public void setSchooltype(Integer schooltype) 
     {
         this.schooltype = schooltype;
     }
 
-    public String getSchooltype() 
+    public Integer getSchooltype() 
     {
         return schooltype;
     }
@@ -69,7 +69,7 @@ public class SchoolInfo extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("school", getSchool())
             .append("schooltype", getSchooltype())

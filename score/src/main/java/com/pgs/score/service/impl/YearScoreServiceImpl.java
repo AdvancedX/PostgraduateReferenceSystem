@@ -12,7 +12,7 @@ import com.pgs.common.core.text.Convert;
  * 历年分数Service业务层处理
  * 
  * @author 许哲睿
- * @date 2023-12-30
+ * @date 2024-06-23
  */
 @Service
 public class YearScoreServiceImpl implements IYearScoreService 
@@ -23,13 +23,13 @@ public class YearScoreServiceImpl implements IYearScoreService
     /**
      * 查询历年分数
      * 
-     * @param year 历年分数主键
+     * @param id 历年分数主键
      * @return 历年分数
      */
     @Override
-    public YearScore selectYearScoreByYear(String year)
+    public YearScore selectYearScoreById(Long id)
     {
-        return yearScoreMapper.selectYearScoreByYear(year);
+        return yearScoreMapper.selectYearScoreById(id);
     }
 
     /**
@@ -71,24 +71,24 @@ public class YearScoreServiceImpl implements IYearScoreService
     /**
      * 批量删除历年分数
      * 
-     * @param years 需要删除的历年分数主键
+     * @param ids 需要删除的历年分数主键
      * @return 结果
      */
     @Override
-    public int deleteYearScoreByYears(String years)
+    public int deleteYearScoreByIds(String ids)
     {
-        return yearScoreMapper.deleteYearScoreByYears(Convert.toStrArray(years));
+        return yearScoreMapper.deleteYearScoreByIds(Convert.toStrArray(ids));
     }
 
     /**
      * 删除历年分数信息
      * 
-     * @param year 历年分数主键
+     * @param id 历年分数主键
      * @return 结果
      */
     @Override
-    public int deleteYearScoreByYear(String year)
+    public int deleteYearScoreById(Long id)
     {
-        return yearScoreMapper.deleteYearScoreByYear(year);
+        return yearScoreMapper.deleteYearScoreById(id);
     }
 }

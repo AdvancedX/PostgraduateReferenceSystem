@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.pgs.score.mapper.YearScoreMapper">
     
     <resultMap type="YearScore" id="YearScoreResult">
+        <result property="id"    column="id"    />
         <result property="year"    column="year"    />
         <result property="school"    column="school"    />
         <result property="majorId"    column="major_id"    />
@@ -13,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectYearScoreVo">
-        select year, school, major_id, major, score from year_score
+        select id, year, school, major_id, major, score from year_score
     </sql>
 
     <select id="selectYearScoreList" parameterType="YearScore" resultMap="YearScoreResult">
@@ -27,12 +28,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectYearScoreByYear" parameterType="String" resultMap="YearScoreResult">
+    <select id="selectYearScoreById" parameterType="Long" resultMap="YearScoreResult">
         <include refid="selectYearScoreVo"/>
-        where year = #{year}
+        where id = #{id}
     </select>
         
-    <insert id="insertYearScore" parameterType="YearScore">
+    <insert id="insertYearScore" parameterType="YearScore" useGeneratedKeys="true" keyProperty="id">
         insert into year_score
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="year != null and year != ''">year,</if>
@@ -53,22 +54,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateYearScore" parameterType="YearScore">
         update year_score
         <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null and year != ''">year = #{year},</if>
             <if test="school != null and school != ''">school = #{school},</if>
             <if test="majorId != null and majorId != ''">major_id = #{majorId},</if>
             <if test="major != null and major != ''">major = #{major},</if>
             <if test="score != null and score != ''">score = #{score},</if>
         </trim>
-        where year = #{year}
+        where id = #{id}
     </update>
 
-    <delete id="deleteYearScoreByYear" parameterType="String">
-        delete from year_score where year = #{year}
+    <delete id="deleteYearScoreById" parameterType="Long">
+        delete from year_score where id = #{id}
     </delete>
 
-    <delete id="deleteYearScoreByYears" parameterType="String">
-        delete from year_score where year in 
-        <foreach item="year" collection="array" open="(" separator="," close=")">
-            #{year}
+    <delete id="deleteYearScoreByIds" parameterType="String">
+        delete from year_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 

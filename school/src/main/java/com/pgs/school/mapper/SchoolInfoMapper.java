@@ -6,8 +6,8 @@ import com.pgs.school.domain.SchoolInfo;
 /**
  * 院校信息Mapper接口
  * 
- * @author pgs
- * @date 2023-12-29
+ * @author 许哲睿
+ * @date 2024-06-23
  */
 public interface SchoolInfoMapper 
 {

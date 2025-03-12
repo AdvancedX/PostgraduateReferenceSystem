@@ -22,8 +22,8 @@ import com.pgs.common.core.page.TableDataInfo;
 /**
  * 院校信息Controller
  * 
- * @author pgs
- * @date 2023-12-29
+ * @author 许哲睿
+ * @date 2024-06-23
  */
 @Controller
 @RequestMapping("/school/schoolinfo")

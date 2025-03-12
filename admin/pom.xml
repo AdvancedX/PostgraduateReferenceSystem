@@ -96,6 +96,11 @@
             <artifactId>linerpr</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.pgs</groupId>
+            <artifactId>blogs</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
