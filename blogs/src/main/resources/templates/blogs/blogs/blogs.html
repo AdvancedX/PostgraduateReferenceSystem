@@ -2,56 +2,43 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('博客论坛列表')" />
+    <style>
+        .card-bg {
+            background-color: #ffffff; /* You can change the color as needed */
+            border: 1px solid #ddd; /* Add a border */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            padding: 15px; /* Optional: Add padding inside the card */
+            margin-bottom: 15px; /* Optional: Add space between cards */
+        }
+        .card-container {
+            margin-top: 20px; /* Adjust the value as needed */
+        }
+        .btn-margin {
+            margin-right: 10px; /* Adjust the value as needed */
+            margin-top: 20px; /* Adjust the value as needed */
+        }
+        .card-title {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="gray-bg">
 <div class="container-div">
-    <div class="row">
-        <div class="col-sm-12 search-collapse">
-            <form id="formId">
-                <div class="select-list">
-                    <ul>
-                        <li>
-                            <label>用户名称：</label>
-                            <input type="text" name="username"/>
-                        </li>
-                        <li>
-                            <label>文章标题：</label>
-                            <input type="text" name="title"/>
-                        </li>
-                        <li>
-                            <label>点赞：</label>
-                            <input type="text" name="likes"/>
-                        </li>
-                        <li>
-                            <label>发布时间：</label>
-                            <input type="text" name="createAt"/>
-                        </li>
-                        <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                        </li>
-                    </ul>
-                </div>
-            </form>
-        </div>
+    <div class="btn-group-sm" id="toolbar" role="group">
+        <a class="btn btn-success btn-margin" onclick="$.operate.add()" shiro:hasPermission="blogs:blogs:add">
+            <i class="fa fa-plus"></i> 写博客
+        </a>
+        <a class="btn btn-warning btn-margin" onclick="$.table.exportExcel()" shiro:hasPermission="blogs:blogs:export">
+            <i class="fa fa-download"></i> 导出
+        </a>
+    </div>
 
-        <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="blogs:blogs:add">
-                <i class="fa fa-plus"></i> 添加
-            </a>
-            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="blogs:blogs:edit">
-                <i class="fa fa-edit"></i> 修改
-            </a>
-            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="blogs:blogs:remove">
-                <i class="fa fa-remove"></i> 删除
-            </a>
-            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="blogs:blogs:export">
-                <i class="fa fa-download"></i> 导出
-            </a>
-        </div>
+        <!-- <div class="col-sm-12 select-table table-striped">
+    <table id="bootstrap-table"></table>
+</div> -->
 
-        <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table"></table>
+        <!-- 新增卡片样式的容器 -->
+        <div class="col-sm-12 card-container" id="card-container">
         </div>
 
     </div>
@@ -110,6 +97,30 @@
                 }]
         };
         $.table.init(options);
+
+        // 动态生成卡片内容
+        $.ajax({
+            url: options.url,
+            type: 'POST',
+            success: function(data) {
+                var cardContainer = $('#card-container');
+                data.rows.forEach(function(row) {
+                    var card = `
+                        <div class="card card-bg">
+                            <div class="card-body">
+                                <h1 class="card-title">${row.title}</h1>
+                                <h3 class="card-subtitle mb-2 text-muted">作者：${row.username}</h3>
+                                <hr>
+                                <p class="card-text">${row.content}</p>
+                                <p class="card-text"><small class="text-muted">发布时间: ${row.createAt}</small></p>
+                                <a href="javascript:void(0)" class="card-link btn btn-danger btn-xs ${removeFlag}" onclick="$.operate.remove('${row.id}')"><i class="fa fa-remove"></i> 删除</a>
+                            </div>
+                        </div>
+                    `;
+                    cardContainer.append(card);
+                });
+            }
+        });
     });
 </script>
 </body>
