@@ -120,17 +120,22 @@
                 </exclusions>
             </dependency>
 
+
+
+
+
+
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>5.2</version>
+            </dependency>
+
             <!-- io常用工具类 -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.deepseek</groupId>
-                <artifactId>deepseek-sdk</artifactId>
-                <version>${deepseek.version}</version>
             </dependency>
 
             <!-- excel工具 -->

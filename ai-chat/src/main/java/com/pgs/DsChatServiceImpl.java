@@ -1,22 +1,29 @@
 package com.pgs;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.tools.javac.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-@Slf4j
 public class DsChatServiceImpl implements DsChatService {
     @Value("${ds.key}")
     private String dsKey;
@@ -40,7 +47,6 @@ public class DsChatServiceImpl implements DsChatService {
         SseEmitter emitter = new SseEmitter(-1L);
         executorService.execute(() -> {
             try {
-                log.info("流式回答开始, 问题: {}", question);
                 // 获取当前用户的对话历史
                 List<Map<String, String>> messages = sessionHistory.getOrDefault(userId, new ArrayList<>());
                 // 添加用户的新问题到对话历史
@@ -49,7 +55,7 @@ public class DsChatServiceImpl implements DsChatService {
                 userMessage.put("content", question);
                 Map<String, String> systemMessage = new HashMap<>();
                 systemMessage.put("role", "system");
-                systemMessage.put("content", "senfel的AI助手");
+                systemMessage.put("content", "你是一个考研指导师，专门帮助考研学子确定专业发展、挑选研究生专业");
                 messages.add(userMessage);
                 messages.add(systemMessage);
                 // 调用 DeepSeek API
@@ -95,15 +101,15 @@ public class DsChatServiceImpl implements DsChatService {
                         messages.add(aiMessage);
                         // 更新会话状态
                         sessionHistory.put(userId, messages);
-                        log.info("流式回答结束, 问题: {}", question);
+                        //log.info("流式回答结束, 问题: {}", question);
                         emitter.complete();
                     }
                 } catch (Exception e) {
-                    log.error("处理 DeepSeek 请求时发生错误", e);
+                    //log.error("处理 DeepSeek 请求时发生错误", e);
                     emitter.completeWithError(e);
                 }
             } catch (Exception e) {
-                log.error("处理 DeepSeek 请求时发生错误", e);
+                //log.error("处理 DeepSeek 请求时发生错误", e);
                 emitter.completeWithError(e);
             }
         });
