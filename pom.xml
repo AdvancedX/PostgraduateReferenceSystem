@@ -127,6 +127,12 @@
                 <version>${commons.io.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.deepseek</groupId>
+                <artifactId>deepseek-sdk</artifactId>
+                <version>${deepseek.version}</version>
+            </dependency>
+
             <!-- excel工具 -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -218,6 +224,18 @@
                 <version>4.7.7</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.pgs</groupId>
+                <artifactId>score_2022</artifactId>
+                <version>4.7.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.pgs</groupId>
+                <artifactId>ai-chat</artifactId>
+                <version>4.7.7</version>
+            </dependency>
+
             <!-- 线性回归预测-->
             <dependency>
                 <groupId>com.pgs</groupId>
@@ -240,6 +258,8 @@
         <module>score</module>
         <module>linerpr</module>
         <module>blogs</module>
+        <module>score_2022</module>
+        <module>ai-chat</module>
     </modules>
     <packaging>pom</packaging>
 
