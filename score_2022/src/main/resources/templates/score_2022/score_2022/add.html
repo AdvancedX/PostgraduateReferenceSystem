@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增2022年详细信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-score_2022-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">年份：</label>
+                <div class="col-sm-8">
+                    <input name="year" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">学校：</label>
+                <div class="col-sm-8">
+                    <input name="school" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业代码：</label>
+                <div class="col-sm-8">
+                    <input name="majorCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业名称：</label>
+                <div class="col-sm-8">
+                    <input name="major" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总分：</label>
+                <div class="col-sm-8">
+                    <input name="score" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">政治：</label>
+                <div class="col-sm-8">
+                    <input name="politic" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">外语：</label>
+                <div class="col-sm-8">
+                    <input name="language" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业课Ⅰ：</label>
+                <div class="col-sm-8">
+                    <input name="subject1" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业课Ⅱ：</label>
+                <div class="col-sm-8">
+                    <input name="subject2" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="note" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">学校省份：</label>
+                <div class="col-sm-8">
+                    <input name="province" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">学校官网：</label>
+                <div class="col-sm-8">
+                    <input name="website" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">专业官网：</label>
+                <div class="col-sm-8">
+                    <input name="majorWebsite" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">电话：</label>
+                <div class="col-sm-8">
+                    <input name="phonenumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">电子邮箱：</label>
+                <div class="col-sm-8">
+                    <input name="email" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">地址：</label>
+                <div class="col-sm-8">
+                    <input name="site" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">隶属：</label>
+                <div class="col-sm-8">
+                    <input name="belonging" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "score_2022/score_2022"
+        $("#form-score_2022-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-score_2022-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

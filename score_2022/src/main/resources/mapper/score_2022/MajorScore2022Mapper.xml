@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pgs.score_2022.mapper.MajorScore2022Mapper">
+    
+    <resultMap type="MajorScore2022" id="MajorScore2022Result">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="school"    column="school"    />
+        <result property="type"    column="type"    />
+        <result property="majorCode"    column="majorCode"    />
+        <result property="major"    column="major"    />
+        <result property="score"    column="score"    />
+        <result property="politic"    column="politic"    />
+        <result property="language"    column="language"    />
+        <result property="subject1"    column="subject1"    />
+        <result property="subject2"    column="subject2"    />
+        <result property="note"    column="note"    />
+        <result property="province"    column="province"    />
+        <result property="schoolType"    column="school_type"    />
+        <result property="website"    column="website"    />
+        <result property="majorWebsite"    column="major_website"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="email"    column="email"    />
+        <result property="site"    column="site"    />
+        <result property="belonging"    column="belonging"    />
+    </resultMap>
+
+    <sql id="selectMajorScore2022Vo">
+        select id, year, school, type, majorCode, major, score, politic, language, subject1, subject2, note, province, school_type, website, major_website, phonenumber, email, site, belonging from major_score_2022
+    </sql>
+
+    <select id="selectMajorScore2022List" parameterType="MajorScore2022" resultMap="MajorScore2022Result">
+        <include refid="selectMajorScore2022Vo"/>
+        <where>  
+            <if test="school != null  and school != ''"> and school = #{school}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="majorCode != null  and majorCode != ''"> and majorCode = #{majorCode}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="schoolType != null  and schoolType != ''"> and school_type = #{schoolType}</if>
+            <if test="belonging != null  and belonging != ''"> and belonging = #{belonging}</if>
+        </where>
+    </select>
+    
+    <select id="selectMajorScore2022ById" parameterType="Long" resultMap="MajorScore2022Result">
+        <include refid="selectMajorScore2022Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMajorScore2022" parameterType="MajorScore2022" useGeneratedKeys="true" keyProperty="id">
+        insert into major_score_2022
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null">year,</if>
+            <if test="school != null">school,</if>
+            <if test="type != null">type,</if>
+            <if test="majorCode != null">majorCode,</if>
+            <if test="major != null">major,</if>
+            <if test="score != null">score,</if>
+            <if test="politic != null">politic,</if>
+            <if test="language != null">language,</if>
+            <if test="subject1 != null">subject1,</if>
+            <if test="subject2 != null">subject2,</if>
+            <if test="note != null">note,</if>
+            <if test="province != null">province,</if>
+            <if test="schoolType != null">school_type,</if>
+            <if test="website != null">website,</if>
+            <if test="majorWebsite != null">major_website,</if>
+            <if test="phonenumber != null">phonenumber,</if>
+            <if test="email != null">email,</if>
+            <if test="site != null">site,</if>
+            <if test="belonging != null">belonging,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null">#{year},</if>
+            <if test="school != null">#{school},</if>
+            <if test="type != null">#{type},</if>
+            <if test="majorCode != null">#{majorCode},</if>
+            <if test="major != null">#{major},</if>
+            <if test="score != null">#{score},</if>
+            <if test="politic != null">#{politic},</if>
+            <if test="language != null">#{language},</if>
+            <if test="subject1 != null">#{subject1},</if>
+            <if test="subject2 != null">#{subject2},</if>
+            <if test="note != null">#{note},</if>
+            <if test="province != null">#{province},</if>
+            <if test="schoolType != null">#{schoolType},</if>
+            <if test="website != null">#{website},</if>
+            <if test="majorWebsite != null">#{majorWebsite},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+            <if test="email != null">#{email},</if>
+            <if test="site != null">#{site},</if>
+            <if test="belonging != null">#{belonging},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMajorScore2022" parameterType="MajorScore2022">
+        update major_score_2022
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null">year = #{year},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="majorCode != null">majorCode = #{majorCode},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="politic != null">politic = #{politic},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="subject1 != null">subject1 = #{subject1},</if>
+            <if test="subject2 != null">subject2 = #{subject2},</if>
+            <if test="note != null">note = #{note},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="schoolType != null">school_type = #{schoolType},</if>
+            <if test="website != null">website = #{website},</if>
+            <if test="majorWebsite != null">major_website = #{majorWebsite},</if>
+            <if test="phonenumber != null">phonenumber = #{phonenumber},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="site != null">site = #{site},</if>
+            <if test="belonging != null">belonging = #{belonging},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMajorScore2022ById" parameterType="Long">
+        delete from major_score_2022 where id = #{id}
+    </delete>
+
+    <delete id="deleteMajorScore2022ByIds" parameterType="String">
+        delete from major_score_2022 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
