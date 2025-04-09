@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek Chat</title>
+    <style>
+        :root {
+            --primary-color: #5b8cff;
+            --button-bg: #f8f9fb;
+            --button-hover-bg: #e9ecef;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .chat-icon {
+            margin-bottom: 20px;
+        }
+        .chat-icon img {
+            width: 80px;
+            height: 80px;
+        }
+        .chat-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .chat-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: var(--button-bg);
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .chat-option:hover {
+            background: var(--button-hover-bg);
+        }
+        .chat-input {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            gap: 12px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .chat-input button {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .chat-input button:hover {
+            background: #407bff;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <!-- 图标区域 -->
+    <div class="chat-icon">
+        <img src="https://via.placeholder.com/80" alt="Chat Icon">
+    </div>
+    <!-- 选项按钮区域 -->
+    <div class="chat-options">
+        <div class="chat-option">Generate cURL JSON POST</div>
+        <div class="chat-option">Demo sorting Python dictionary</div>
+        <div class="chat-option">Learn JS closures</div>
+        <div class="chat-option">Rails authentication endpoint</div>
+        <div class="chat-option">Explain JSON content types</div>
+        <div class="chat-option">Compare JS substring checks</div>
+    </div>
+    <!-- 输入区域 -->
+    <div class="chat-input">
+        <input type="text" placeholder="Ask something...">
+        <button>Send</button>
+    </div>
+</div>
+</body>
+</html>

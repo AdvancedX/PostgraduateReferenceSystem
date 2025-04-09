@@ -4,50 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepSeek Chat</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
       --primary-color: #5b8cff;
-      --user-bg: linear-gradient(135deg, #5b8cff 0%, #3d6ef7 100%);
-      --bot-bg: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+      --button-bg: #f8f9fb;
+      --button-hover-bg: #e9ecef;
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
+      min-width: 100vw;
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
     .chat-container {
-      width: 100%;
-      max-width: 800px;
-      height: 90vh;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      width: 60%;
+      height: 100%;
+      padding: 20px;
+      background: transparent; /* 移除背景 */
+      border-radius: 0; /* 移除圆角 */
+      box-shadow: none; /* 移除阴影 */
+      text-align: center;
     }
-    .chat-header {
-      padding: 24px;
-      background: var(--primary-color);
-      color: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    .chat-icon {
+      margin-bottom: 20px;
     }
-    .chat-header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: -0.5px;
+    .chat-icon img {
+      width: 80px;
+      height: 80px;
+    }
+    .chat-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .chat-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      background: var(--button-bg);
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .chat-option:hover {
+      background: var(--button-hover-bg);
     }
     .chat-messages {
       flex: 1;
+      width: 100%;
       padding: 20px;
+      padding-bottom: 80px; /* 添加底部内边距，防止内容被聊天框遮挡 */
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -63,186 +86,107 @@
       word-break: break-word;
     }
     .chat-message.user {
-      background: var(--user-bg);
+      background: linear-gradient(135deg, #5b8cff 0%, #3d6ef7 100%);
       color: white;
       align-self: flex-end;
       border-bottom-right-radius: 4px;
       box-shadow: var(--shadow);
     }
     .chat-message.bot {
-      background: var(--bot-bg);
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
       color: #2d3748;
       align-self: flex-start;
       border-bottom-left-radius: 4px;
       box-shadow: var(--shadow);
     }
     .chat-input {
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 800px;
       display: flex;
       gap: 12px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
     }
     .chat-input input {
       flex: 1;
-      padding: 14px 20px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 1rem;
-      transition: all 0.2s ease;
-      background: rgba(255, 255, 255, 0.8);
-    }
-    .chat-input input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.2);
     }
     .chat-input button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 16px;
+      padding: 10px 20px;
       background: var(--primary-color);
       color: white;
-      font-size: 1rem;
-      font-weight: 500;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      transition: background 0.2s ease;
     }
     .chat-input button:hover {
-      background: #406cff;
-      transform: translateY(-1px);
-    }
-    .chat-input button:disabled {
-      background: #c2d1ff;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .chat-input button svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
+      background: #407bff;
     }
     @keyframes messageAppear {
       from {
         opacity: 0;
         transform: translateY(10px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
-      }
-    }
-    .typing-indicator {
-      display: inline-flex;
-      gap: 6px;
-      padding: 12px 20px;
-      background: var(--bot-bg);
-      border-radius: 20px;
-      align-self: flex-start;
-    }
-    .typing-dot {
-      width: 8px;
-      height: 8px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      animation: typing 1.4s infinite ease-in-out;
-    }
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    @keyframes typing {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-4px);
-      }
-    }
-    @media (max-width: 640px) {
-      body {
-        padding: 10px;
-      }
-      .chat-container {
-        height: 95vh;
-        border-radius: 16px;
-      }
-      .chat-message {
-        max-width: 85%;
       }
     }
   </style>
 </head>
 <body>
 <div class="chat-container">
-  <div class="chat-header">
-    <h1>DeepSeek Chat</h1>
+  <!-- 图标区域 -->
+  <div class="chat-icon">
+    <img th:src="@{/img/aichat_icon2.png}">
   </div>
+  <!-- 选项按钮区域 -->
+  <div class="chat-options">
+    <div class="chat-option" onclick="sendPredefinedMessage('计算机学生应该怎么发展？')">计算机学生应该怎么发展？</div>
+    <div class="chat-option" onclick="sendPredefinedMessage('土木老哥应该如何突破时代局限？')">土木老哥应该如何突破时代局限？</div>
+    <div class="chat-option" onclick="sendPredefinedMessage('帮我设计一个408复习规划表')">帮我设计一个408复习规划表</div>
+    <div class="chat-option" onclick="sendPredefinedMessage('报考长安大学计算机科学与技术的难度如何？')">报考长安大学计算机科学与技术的难度如何？</div>
+    <div class="chat-option" onclick="sendPredefinedMessage('考研失败应该怎么规划调剂？')">考研失败应该怎么规划调剂？</div>
+    <div class="chat-option" onclick="sendPredefinedMessage('生化环材天坑专业的考研前景如何？')">生化环材天坑专业的考研前景如何？</div>
+  </div>
+  <!-- 消息展示区域 -->
   <div class="chat-messages" id="chatMessages"></div>
+  <!-- 输入区域 -->
   <div class="chat-input">
-    <input type="text" id="questionInput" placeholder="输入消息..." onkeydown="handleKeyDown(event)">
-    <button id="sendButton" disabled>
-      <svg viewBox="0 0 24 24">
-        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-      </svg>
-      发送
-    </button>
+    <input type="text" id="questionInput" placeholder="和考研智导机器人聊聊..." onkeydown="handleKeyDown(event)">
+    <button id="sendButton" disabled>发送</button>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
   const questionInput = document.getElementById('questionInput');
   const sendButton = document.getElementById('sendButton');
   const chatMessages = document.getElementById('chatMessages');
   let isBotResponding = false;
+
   // 输入验证
   questionInput.addEventListener('input', () => {
     sendButton.disabled = questionInput.value.trim().length === 0;
   });
+
   // 回车发送
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !sendButton.disabled && !isBotResponding) {
       sendButton.click();
     }
   }
-  // 修改后的消息处理逻辑
-  let currentBotMessage = null; // 当前正在更新的AI消息
-  async function handleBotResponse(response) {
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    currentBotMessage = displayMessage('bot', '');
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          // 处理最后剩余的数据
-          if (buffer) processLine(buffer);
-          break;
-        }
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        // 保留未完成的行在缓冲区
-        buffer = lines.pop() || '';
-        lines.forEach(line => {
-          if (line.startsWith('data:')) {
-            const data = line.replace(/^data:\s*/g, '').trim();
-            if (data === '[DONE]') return;
-            currentBotMessage.textContent += data;
-          }
-        });
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    } finally {
-      currentBotMessage = null;
-    }
-  }
+
   // 发送逻辑
   sendButton.addEventListener('click', async () => {
     if (isBotResponding) return;
@@ -253,50 +197,101 @@
     questionInput.value = '';
     sendButton.disabled = true;
     isBotResponding = true;
-    // 显示用户消息（新消息始终出现在下方）
+
     displayMessage('user', question);
+
     try {
-      // 显示加载状态
       const typingIndicator = createTypingIndicator();
 
       const response = await fetch('/deepSeek/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'text/event-stream'
+          'Accept': 'text/event-stream',
         },
         body: JSON.stringify({ question }),
       });
+
       typingIndicator.remove();
-      await handleBotResponse(response); // 处理流式响应
+      await handleBotResponse(response);
     } catch (error) {
-      displayMessage('bot', '暂时无法处理您的请求，请稍后再试');
+      displayMessage('bot', 'Error: Unable to process your request.');
     } finally {
       isBotResponding = false;
       questionInput.focus();
     }
   });
-  // 创建消息元素
+
+  // 处理流式响应
+  async function handleBotResponse(response) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let currentBotMessage = displayMessage('bot', '');
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        lines.forEach((line) => {
+          if (line.startsWith('data:')) {
+            const data = line.replace(/^data:\s*/, '').trim();
+            if (data === '[DONE]') return;
+            currentBotMessage.innerHTML += marked(data); // 处理 Markdown
+          }
+        });
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    } finally {
+      currentBotMessage = null;
+    }
+  }
+
+  // 显示消息
   function displayMessage(sender, content) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}`;
-    messageDiv.textContent = content;
+
+    if (sender === 'bot') {
+      // 如果是机器人消息，解析 Markdown
+      messageDiv.innerHTML = marked(content);
+    } else {
+      // 如果是用户消息，直接显示文本内容
+      messageDiv.textContent = content;
+    }
+
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return messageDiv;
   }
-  // 创建输入指示器
+
+  // 创建打字指示器
   function createTypingIndicator() {
     const container = document.createElement('div');
     container.className = 'typing-indicator';
     container.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    `;
     chatMessages.appendChild(container);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return container;
+  }
+
+  // 发送预定义消息
+  function sendPredefinedMessage(message) {
+    chatMessages.style.display = 'flex'; // 显示消息区域
+    displayMessage('user', message);
+    questionInput.value = message;
+    sendButton.disabled = false;
+    sendButton.click();
   }
 </script>
 </body>
