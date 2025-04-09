@@ -168,7 +168,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
   const questionInput = document.getElementById('questionInput');
   const sendButton = document.getElementById('sendButton');
@@ -242,7 +241,7 @@
           if (line.startsWith('data:')) {
             const data = line.replace(/^data:\s*/, '').trim();
             if (data === '[DONE]') return;
-            currentBotMessage.innerHTML += marked(data); // 处理 Markdown
+            currentBotMessage.textContent += data;
           }
         });
 
@@ -257,15 +256,7 @@
   function displayMessage(sender, content) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}`;
-
-    if (sender === 'bot') {
-      // 如果是机器人消息，解析 Markdown
-      messageDiv.innerHTML = marked(content);
-    } else {
-      // 如果是用户消息，直接显示文本内容
-      messageDiv.textContent = content;
-    }
-
+    messageDiv.textContent = content;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return messageDiv;
