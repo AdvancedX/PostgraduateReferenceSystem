@@ -55,7 +55,7 @@ public class DsChatServiceImpl implements DsChatService {
                 userMessage.put("content", question);
                 Map<String, String> systemMessage = new HashMap<>();
                 systemMessage.put("role", "system");
-                systemMessage.put("content", "你是一个考研指导师，专门帮助考研学子确定专业发展、挑选研究生专业");
+                systemMessage.put("content", "你是一个考研指导师，专门帮助考研学子确定专业发展、挑选研究生专业;请在回答中避免使用markdown文法");
                 messages.add(userMessage);
                 messages.add(systemMessage);
                 // 调用 DeepSeek API
