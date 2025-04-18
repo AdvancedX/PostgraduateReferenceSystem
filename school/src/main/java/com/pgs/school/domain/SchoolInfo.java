@@ -24,7 +24,7 @@ public class SchoolInfo extends BaseEntity
 
     /** 院校类型 */
     @Excel(name = "院校类型")
-    private Integer schooltype;
+    private String schooltype;
 
     /** 地区 */
     @Excel(name = "地区")
@@ -48,12 +48,12 @@ public class SchoolInfo extends BaseEntity
     {
         return school;
     }
-    public void setSchooltype(Integer schooltype) 
+    public void setSchooltype(String schooltype)
     {
         this.schooltype = schooltype;
     }
 
-    public Integer getSchooltype() 
+    public String getSchooltype()
     {
         return schooltype;
     }

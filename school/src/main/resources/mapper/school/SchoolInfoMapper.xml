@@ -19,7 +19,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSchoolInfoVo"/>
         <where>  
             <if test="school != null  and school != ''"> and school like concat('%', #{school}, '%')</if>
-            <if test="schooltype != null "> and schooltype like concat('%', #{schooltype}, '%')</if>
+            <if test="schooltype != null and schooltype != ''">
+                and schooltype like concat('%', #{schooltype}, '%')
+            </if>
             <if test="region != null  and region != ''"> and region = #{region}</if>
         </where>
     </select>
