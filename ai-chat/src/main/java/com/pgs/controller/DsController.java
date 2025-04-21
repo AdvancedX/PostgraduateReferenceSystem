@@ -1,6 +1,6 @@
-package com.pgs;
+package com.pgs.controller;
 
-import org.apache.shiro.SecurityUtils;
+import com.pgs.service.DsChatService;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.ThreadContext;
 import org.springframework.http.MediaType;
@@ -46,8 +46,7 @@ public class DsController {
         // 确保在异步请求中也能访问 SecurityManager
         ThreadContext.bind(securityManager);
 
-        //TODO 默认用户ID,实际场景从token获取
-        String userId = "senfel";
+        String userId = "admin";
         return dsChatService.chat(userId, question);
     }
 }

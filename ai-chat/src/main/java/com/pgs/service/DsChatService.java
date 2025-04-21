@@ -1,4 +1,4 @@
-package com.pgs;
+package com.pgs.service;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -14,7 +14,6 @@ public interface DsChatService {
      * chat
      * @param userId
      * @param question
-     * @author senfel
      * @date 2025/3/13 17:30
      * @return org.springframework.web.servlet.mvc.method.annotation.SseEmitter
      */
