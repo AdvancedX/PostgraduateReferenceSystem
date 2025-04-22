@@ -133,6 +133,12 @@ public class SysIndexController extends BaseController
         mmap.put("version", PGSConfig.getVersion());
         return "main";
     }
+    @GetMapping("/system/echarts")
+    public String echarts(ModelMap mmap)
+    {
+        mmap.put("version", PGSConfig.getVersion());
+        return "echarts";
+    }
 
     // content-main class
     public String contentMainClass(Boolean footer, Boolean tagsView)
