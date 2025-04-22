@@ -68,6 +68,7 @@ public class SysRegisterService
             user.setUserName(loginName);
             user.setSalt(ShiroUtils.randomSalt());
             user.setPassword(passwordService.encryptPassword(loginName, password, user.getSalt()));
+
             boolean regFlag = userService.registerUser(user);
             if (!regFlag)
             {
