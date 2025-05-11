@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import json
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # 导入CORS
+
 from sklearn.preprocessing import MinMaxScaler
 import os
 import math
@@ -13,6 +15,7 @@ torch.manual_seed(15)
 np.random.seed(15)
 
 app = Flask(__name__)
+CORS(app)  # 启用CORS支持，允许所有域名访问
 
 # 模型定义（与原脚本相同）
 class PositionalEncoding(nn.Module):
