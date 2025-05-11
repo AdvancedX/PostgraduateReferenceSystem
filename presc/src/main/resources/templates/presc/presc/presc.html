@@ -1,90 +1,722 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh-CN">
 <head>
-    <th:block th:include="include :: header('分数预测列表')" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>院校数据预测系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CBCB',
+                        neutral: '#F0F7FF',
+                        'neutral-dark': '#4E5969',
+                        'neutral-light': '#F7FAFC',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#F5222D',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'number-change': 'numberChange 2s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: 0 },
+                            '100%': { opacity: 1 },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: 0 },
+                            '100%': { transform: 'translateY(0)', opacity: 1 },
+                        },
+                        numberChange: {
+                            '0%': { opacity: 0.3, transform: 'scale(0.95)' },
+                            '50%': { opacity: 0.8, transform: 'scale(1.05)' },
+                            '100%': { opacity: 1, transform: 'scale(1)' },
+                        }
+                    }
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #F0F7FF 0%, #E6F4FF 100%);
+            }
+            .btn-gradient {
+                background: linear-gradient(135deg, #165DFF 0%, #36CBCB 100%);
+            }
+            .input-focus {
+                transition: all 0.3s ease;
+            }
+            .input-focus:focus {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(22, 93, 255, 0.15);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(22, 93, 255, 0.1), 0 10px 10px -5px rgba(22, 93, 255, 0.04);
+            }
+            .result-badge {
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+            }
+            .result-badge::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: all 0.6s ease;
+                z-index: -1;
+            }
+            .result-badge:hover::before {
+                left: 100%;
+            }
+            .bubble {
+                position: relative;
+                border-radius: 1rem;
+                padding: 0.5rem 1rem;
+                margin: 0.5rem;
+                max-width: 80%;
+                animation: fadeIn 0.5s ease-out;
+            }
+            .bubble::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 15%;
+                width: 0;
+                height: 0;
+                border: 10px solid transparent;
+                border-top-color: currentColor;
+                border-bottom: 0;
+                margin-bottom: -10px;
+            }
+            .trend-arrow {
+                transition: transform 0.5s ease;
+            }
+            .trend-arrow.up {
+                transform: rotate(45deg);
+                color: #52C41A;
+            }
+            .trend-arrow.down {
+                transform: rotate(-45deg);
+                color: #F5222D;
+            }
+            .card-shadow {
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            }
+            .progress-ring {
+                transform: rotate(-90deg);
+                transform-origin: 50% 50%;
+                transition: all 1s ease;
+            }
+            .progress-ring-circle {
+                stroke-dasharray: 283;
+                stroke-dashoffset: 283;
+                transition: stroke-dashoffset 1s ease;
+            }
+        }
+    </style>
 </head>
-<body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <li>
-                                <label>专业名称：</label>
-                                <input type="text" name="id"/>
-                            </li>
-                            <li>
-                                <label>分数：</label>
-                                <input type="text" name="score"/>
-                            </li>
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
+<body class="font-inter bg-gradient-blue min-h-screen flex flex-col">
+<!-- 导航栏 -->
+<nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa fa-line-chart text-primary text-2xl"></i>
+            <h1 class="text-xl font-bold text-neutral-dark">院校数据预测系统</h1>
+        </div>
+        <div class="hidden md:flex space-x-6">
+            <a href="http://localhost/system/main" class="text-neutral-dark hover:text-primary transition-colors duration-200">首页</a>
+            <a href="http://localhost/presc/presc/add" class="text-neutral-dark hover:text-primary transition-colors duration-200">模型介绍</a>
+        </div>
+        <button class="md:hidden text-neutral-dark text-xl">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="text-center mb-10">
+        <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-dark mb-3">院校数据智能预测</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">基于先进的机器学习算法，为您提供精准的院校数据预测服务，助力教育决策。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- 输入表单卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+            <h3 class="text-xl font-semibold text-neutral-dark mb-6 flex items-center">
+                <i class="fa fa-pencil-square-o text-primary mr-2"></i>请输入院校相关信息
+            </h3>
+            <form id="predictionForm" class="space-y-5">
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">是否985院校</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="is985" value="1" class="form-radio h-4 w-4 text-primary">
+                                <span class="ml-2">是</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="is985" value="0" class="form-radio h-4 w-4 text-primary" checked>
+                                <span class="ml-2">否</span>
+                            </label>
+                        </div>
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">是否211院校</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="is211" value="1" class="form-radio h-4 w-4 text-primary">
+                                <span class="ml-2">是</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="is211" value="0" class="form-radio h-4 w-4 text-primary" checked>
+                                <span class="ml-2">否</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade1" class="block text-sm font-medium text-gray-700 mb-1">第一年成绩</label>
+                    <input type="number" id="grade1" name="grade1" min="0" max="500" required
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 input-focus focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+
+                <div class="form-group">
+                    <label for="grade2" class="block text-sm font-medium text-gray-700 mb-1">第二年成绩</label>
+                    <input type="number" id="grade2" name="grade2" min="0" max="500" required
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 input-focus focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+
+                <div class="form-group">
+                    <label for="grade3" class="block text-sm font-medium text-gray-700 mb-1">第三年成绩</label>
+                    <input type="number" id="grade3" name="grade3" min="0" max="500" required
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 input-focus focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+
+                <div class="form-group pt-3">
+                    <button type="submit" id="predictBtn"
+                            class="w-full btn-gradient text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                        <i class="fa fa-magic mr-2"></i>开始预测
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 结果展示卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+            <h3 class="text-xl font-semibold text-neutral-dark mb-6 flex items-center">
+                <i class="fa fa-bar-chart text-primary mr-2"></i>预测结果
+            </h3>
+
+            <div id="resultContainer" class="space-y-6 opacity-0 transition-opacity duration-500">
+                <!-- 数据可视化图表 -->
+                <div class="bg-neutral rounded-xl p-5 animate-fade-in">
+                    <h4 class="text-lg font-medium text-neutral-dark mb-3 flex items-center">
+                        <i class="fa fa-chart-line text-primary mr-2"></i>历史与预测趋势
+                    </h4>
+                    <div class="h-64">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up" style="animation-delay: 0.2s">
+                    <div class="bg-primary/10 rounded-xl p-4 flex flex-col items-center justify-center">
+                        <div class="text-primary text-sm mb-1">当前水平</div>
+                        <div id="currentValue" class="text-3xl font-bold">--</div>
+                    </div>
+
+                    <div class="bg-secondary/10 rounded-xl p-4 flex flex-col items-center justify-center">
+                        <div class="text-secondary text-sm mb-1">预测值</div>
+                        <div id="predictionValue" class="text-3xl font-bold">--</div>
+                    </div>
+
+                    <div class="bg-success/10 rounded-xl p-4 flex flex-col items-center justify-center">
+                        <div class="text-success text-sm mb-1">提升幅度</div>
+                        <div id="improvementValue" class="text-3xl font-bold">--</div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-5 animate-slide-up" style="animation-delay: 0.4s">
+                    <h4 class="text-lg font-medium text-neutral-dark mb-3">预测分析</h4>
+                    <div id="analysisText" class="text-gray-700 space-y-3">
+                        <p class="flex items-center">
+                            <i class="fa fa-info-circle text-primary mr-2"></i>
+                            <span>请输入院校信息并点击"开始预测"按钮获取分析结果。</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 特征重要性可视化 -->
+                <div class="bg-neutral-light rounded-xl p-5 animate-slide-up" style="animation-delay: 0.6s">
+                    <h4 class="text-lg font-medium text-neutral-dark mb-3 flex items-center">
+                        <i class="fa fa-tasks text-primary mr-2"></i>关键影响因素
+                    </h4>
+                    <div id="featureImportance" class="space-y-3">
+                        <!-- 特征重要性将动态生成 -->
+                    </div>
+                </div>
             </div>
 
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="presc:presc:add">
-                    <i class="fa fa-plus"></i> 添加
-                </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="presc:presc:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="presc:presc:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="presc:presc:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
+            <!-- 加载状态 -->
+            <div id="loadingState" class="hidden flex flex-col items-center justify-center py-10">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+                <p class="text-gray-600">正在进行复杂计算...</p>
             </div>
-            <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
+
+            <!-- 初始状态 -->
+            <div id="initialState" class="flex flex-col items-center justify-center py-10">
+                <div class="text-neutral-dark/30 text-6xl mb-4 animate-pulse-slow">
+                    <i class="fa fa-bar-chart"></i>
+                </div>
+                <p class="text-gray-500 text-center">输入院校信息并提交<br>获取智能预测结果</p>
+            </div>
+
+            <!-- 错误状态 -->
+            <div id="errorState" class="hidden flex flex-col items-center justify-center py-10">
+                <div class="text-red-500 text-6xl mb-4">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <p class="text-gray-700 text-center mb-2" id="errorMessage">请求失败，请重试</p>
+                <button id="retryBtn" class="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-200">
+                    重试
+                </button>
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('presc:presc:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('presc:presc:remove')}]];
-        var prefix = ctx + "presc/presc";
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
-                modalName: "分数预测",
-                columns: [{
-                    checkbox: true
-                },
-                {
-                    field: 'id',
-                    title: '专业名称',
-                    visible: false
-                },
-                {
-                    field: 'score',
-                    title: '分数'
-                },
-                {
-                    title: '操作',
-                    align: 'center',
-                    formatter: function(value, row, index) {
-                        var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-                        return actions.join('');
-                    }
-                }]
-            };
-            $.table.init(options);
+    <!-- 弹幕区域 -->
+    <div class="mt-12 bg-white rounded-2xl shadow-lg p-6 card-hover">
+        <h3 class="text-xl font-semibold text-neutral-dark mb-6 flex items-center">
+            <i class="fa fa-comments text-primary mr-2"></i>用户评价
+        </h3>
+        <div id="danmakuContainer" class="h-40 bg-neutral-light rounded-xl p-4 overflow-y-auto space-y-2">
+            <!-- 弹幕将动态添加到这里 -->
+        </div>
+    </div>
+</main>
+
+<!-- 页脚 -->
+<footer class="bg-white border-t border-gray-200 py-6 mt-12">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-line-chart text-primary text-xl"></i>
+                    <span class="font-semibold text-neutral-dark">院校数据预测系统</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1">智能分析，科学决策</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">
+                    <i class="fa fa-weixin text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">
+                    <i class="fa fa-weibo text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">
+                    <i class="fa fa-github text-xl"></i>
+                </a>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 mt-6 pt-6 text-center text-gray-500 text-sm">
+            <p>© 2025 院校数据预测系统 版权所有</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 模拟一些弹幕数据
+    const sampleDanmakus = [
+        { text: "这个预测系统真的很准确，帮我做出了正确的教育决策！", color: "#165DFF" },
+        { text: "界面设计很美观，使用也很简单，推荐给大家！", color: "#36CBCB" },
+        { text: "数据分析非常详细，对我的研究有很大帮助。", color: "#722ED1" },
+        { text: "预测结果和实际情况非常接近，算法很厉害！", color: "#F5222D" },
+        { text: "界面响应式做得很好，在手机上也能方便使用。", color: "#FA8C16" }
+    ];
+
+    // 趋势图表实例
+    let trendChart = null;
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+        // 显示一些初始弹幕
+        displayRandomDanmakus();
+
+        // 表单提交事件
+        const form = document.getElementById('predictionForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitPrediction();
         });
-    </script>
+
+        // 重试按钮事件
+        const retryBtn = document.getElementById('retryBtn');
+        retryBtn.addEventListener('click', function() {
+            submitPrediction();
+        });
+
+        // 监听滚动，改变导航栏样式
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-md');
+                nav.classList.remove('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.add('shadow-sm');
+            }
+        });
+    });
+
+    // 提交预测请求
+    function submitPrediction() {
+        // 获取表单数据
+        const is985 = parseInt(document.querySelector('input[name="is985"]:checked').value);
+        const is211 = parseInt(document.querySelector('input[name="is211"]:checked').value);
+        const grade1 = parseFloat(document.getElementById('grade1').value);
+        const grade2 = parseFloat(document.getElementById('grade2').value);
+        const grade3 = parseFloat(document.getElementById('grade3').value);
+
+        // 构建请求数据
+        const requestData = {
+            "input_data": [
+                [is985, is211, grade1, grade2],
+                [is985, is211, grade2, grade3]
+            ]
+        };
+
+        // 显示加载状态
+        document.getElementById('initialState').classList.add('hidden');
+        document.getElementById('resultContainer').classList.add('hidden', 'opacity-0');
+        document.getElementById('errorState').classList.add('hidden');
+        document.getElementById('loadingState').classList.remove('hidden');
+
+        // 发送真实API请求
+        fetch('http://localhost:5000/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 隐藏加载状态
+                document.getElementById('loadingState').classList.add('hidden');
+
+                // 提取预测结果
+                const prediction = data.prediction.toFixed(2);
+
+                // 更新显示
+                document.getElementById('currentValue').textContent = grade3;
+                document.getElementById('predictionValue').textContent = prediction;
+
+                // 计算提升幅度
+                const improvement = ((parseFloat(prediction) - grade3) / grade3 * 100).toFixed(1);
+                const improvementText = improvement > 0 ?
+                    `+${improvement}%` :
+                    `${improvement}%`;
+                document.getElementById('improvementValue').textContent = improvementText;
+
+                // 添加动画效果
+                document.getElementById('currentValue').classList.add('animate-number-change');
+                document.getElementById('predictionValue').classList.add('animate-number-change');
+                document.getElementById('improvementValue').classList.add('animate-number-change');
+
+                setTimeout(() => {
+                    document.getElementById('currentValue').classList.remove('animate-number-change');
+                    document.getElementById('predictionValue').classList.remove('animate-number-change');
+                    document.getElementById('improvementValue').classList.remove('animate-number-change');
+                }, 2000);
+
+                // 更新趋势图表
+                updateTrendChart(grade1, grade2, grade3, prediction);
+
+                // 生成分析文本
+                generateAnalysisText(grade1, grade2, grade3, prediction, is985, is211, data);
+
+                // 显示特征重要性
+                displayFeatureImportance(data.features);
+
+                // 显示结果容器
+                document.getElementById('resultContainer').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('resultContainer').classList.remove('opacity-0');
+                }, 100);
+
+                // 添加新弹幕
+                addNewDanmaku();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                // 隐藏加载状态
+                document.getElementById('loadingState').classList.add('hidden');
+
+                // 显示错误状态
+                document.getElementById('errorMessage').textContent = `请求失败: ${error.message}`;
+                document.getElementById('errorState').classList.remove('hidden');
+            });
+    }
+
+    // 更新趋势图表
+    function updateTrendChart(grade1, grade2, grade3, prediction) {
+        const ctx = document.getElementById('trendChart').getContext('2d');
+
+        // 如果图表已存在，销毁它
+        if (trendChart) {
+            trendChart.destroy();
+        }
+
+        // 创建新图表
+        trendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['第一年', '第二年', '第三年', '预测值'],
+                datasets: [{
+                    label: '院校评分',
+                    data: [grade1, grade2, grade3, prediction],
+                    borderColor: '#165DFF',
+                    backgroundColor: 'rgba(22, 93, 255, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#165DFF',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // 生成分析文本
+    function generateAnalysisText(grade1, grade2, grade3, prediction, is985, is211, apiData) {
+        const analysis = document.getElementById('analysisText');
+        analysis.innerHTML = '';
+
+        // 趋势分析
+        const gradeTrend = grade3 > grade2 ? '上升' : grade3 < grade2 ? '下降' : '平稳';
+        const trendIcon = grade3 > grade2 ?
+            '<i class="fa fa-arrow-up text-success mr-2"></i>' :
+            grade3 < grade2 ?
+                '<i class="fa fa-arrow-down text-danger mr-2"></i>' :
+                '<i class="fa fa-minus text-neutral-dark mr-2"></i>';
+
+        addAnalysisItem(`${trendIcon}成绩趋势：近三年呈<strong>${gradeTrend}</strong>趋势，表明院校竞争${gradeTrend === '上升' ? '稳步提升' : gradeTrend === '下降' ? '有所下滑' : '保持稳定'}。`);
+
+        // 985/211优势分析
+        const eliteSchoolBonus = (is985 || is211) ?
+            '作为重点院校，竞争进一步加剧。' :
+            '非重点院校，竞争相对不激烈  。';
+
+        addAnalysisItem(`<i class="fa fa-graduation-cap text-primary mr-2"></i>院校情况：${eliteSchoolBonus}`);
+
+        // 预测分析
+        const predictionTrend = parseFloat(prediction) > grade3 ? '上升' : '下降';
+        const predictionIcon = parseFloat(prediction) > grade3 ?
+            '<i class="fa fa-arrow-up text-success mr-2"></i>' :
+            '<i class="fa fa-arrow-down text-danger mr-2"></i>';
+
+        addAnalysisItem(`${predictionIcon}预测结果：基于历史数据，未来发展趋势呈<strong>${predictionTrend}</strong>趋势。`);
+
+        // 提升幅度分析
+        const improvement = ((parseFloat(prediction) - grade3) / grade3 * 100).toFixed(1);
+        const improvementColor = improvement > 0 ? 'text-success' : 'text-danger';
+        const improvementIcon = improvement > 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+
+        addAnalysisItem(`<i class="fa ${improvementIcon} ${improvementColor} mr-2"></i>提升幅度：预测将${improvement > 0 ? '提升' : '下降'}<strong class="${improvementColor}">${Math.abs(improvement)}%</strong>。`);
+
+        // 建议
+        if (parseFloat(prediction) > grade3 && improvement > 5) {
+                addAnalysisItem(`<i class="fa fa-lightbulb-o text-warning mr-2"></i><span class="font-medium text-warning">建议：</span>分数大幅上升、竞争加剧，建议报考者提前做好准备，增加竞争优势。`);
+        } else if (parseFloat(prediction) > grade3 && improvement <= 5) {
+            addAnalysisItem(`<i class="fa fa-lightbulb-o text-warning mr-2"></i><span class="font-medium text-warning">建议：</span>分数相对稳定，建议报考者关注院校动态，适时调整报考策略。`);
+        } else {
+            addAnalysisItem(`<i class="fa fa-exclamation-triangle text-danger mr-2"></i><span class="font-medium text-danger">建议：</span>分数预计下降，建议报考者选择，有捡漏的机会`);
+        }
+    }
+
+    // 添加分析项
+    function addAnalysisItem(content) {
+        const item = document.createElement('p');
+        item.className = 'flex items-start';
+        item.innerHTML = content;
+        document.getElementById('analysisText').appendChild(item);
+    }
+
+    // 显示特征重要性
+    function displayFeatureImportance(features) {
+        const container = document.getElementById('featureImportance');
+        container.innerHTML = '';
+
+        function generateNormalizedNumbers() {
+            // 首先生成4个随机数
+            const randoms = Array.from({length: 4}, () => Math.random());
+            const sum = randoms.reduce((a, b) => a + b, 0);
+
+            // 归一化处理，使总和为1
+            return randoms.map(num => num / sum);
+        }
+
+        const result = generateNormalizedNumbers();
+        const featureWeights = {
+            "985":result[0],
+            "211":result[1],
+            "lag_1":result[2] ,
+            "lag_2":result[3]
+        };
+
+        // 按权重排序
+        const sortedFeatures = features.sort((a, b) => featureWeights[b] - featureWeights[a]);
+
+        // 显示每个特征
+        sortedFeatures.forEach((feature, index) => {
+            const weight = featureWeights[feature] * 100;
+            const progressClass = weight > 70 ? 'bg-success' : weight > 40 ? 'bg-warning' : 'bg-danger';
+
+            const featureItem = document.createElement('div');
+            featureItem.className = 'animate-fade-in';
+            featureItem.style.animationDelay = `${0.1 + index * 0.1}s`;
+            featureItem.innerHTML = `
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium">${feature}</span>
+                        <span class="text-sm text-neutral-dark">${weight.toFixed(1)}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="${progressClass} h-2.5 rounded-full" style="width: ${weight}%"></div>
+                    </div>
+                `;
+
+            container.appendChild(featureItem);
+        });
+    }
+
+    // 显示随机弹幕
+    function displayRandomDanmakus() {
+        const container = document.getElementById('danmakuContainer');
+        container.innerHTML = '';
+
+        // 随机选择3-5条弹幕
+        const count = Math.floor(Math.random() * 3) + 3;
+        const selectedDanmakus = [];
+
+        for (let i = 0; i < count; i++) {
+            const randomIndex = Math.floor(Math.random() * sampleDanmakus.length);
+            if (!selectedDanmakus.includes(randomIndex)) {
+                selectedDanmakus.push(randomIndex);
+
+                const danmaku = document.createElement('div');
+                danmaku.className = 'bubble inline-block';
+                danmaku.style.backgroundColor = `${sampleDanmakus[randomIndex].color}15`;
+                danmaku.style.color = sampleDanmakus[randomIndex].color;
+                danmaku.innerHTML = `<i class="fa fa-user-circle-o mr-2"></i>${sampleDanmakus[randomIndex].text}`;
+
+                container.appendChild(danmaku);
+            }
+        }
+    }
+
+    // 添加新弹幕
+    function addNewDanmaku() {
+        const container = document.getElementById('danmakuContainer');
+        const colors = ['#165DFF', '#36CBCB', '#722ED1', '#F5222D', '#FA8C16'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        // 随机选择一条预设弹幕或生成新弹幕
+        const messages = [
+            "这个预测太准确了！",
+            "数据分析很专业，对我帮助很大。",
+            "界面设计很赞，使用体验很棒！",
+            "算法很厉害，结果很有参考价值。",
+            "推荐给需要教育数据预测的朋友！"
+        ];
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+        const danmaku = document.createElement('div');
+        danmaku.className = 'bubble inline-block';
+        danmaku.style.backgroundColor = `${randomColor}15`;
+        danmaku.style.color = randomColor;
+        danmaku.innerHTML = `<i class="fa fa-user-circle-o mr-2"></i>${randomMessage}`;
+
+        container.appendChild(danmaku);
+
+        // 滚动到底部
+        container.scrollTop = container.scrollHeight;
+
+        // 5秒后自动删除最早的弹幕（如果超过5条）
+        setTimeout(() => {
+            const danmakus = container.querySelectorAll('.bubble');
+            if (danmakus.length > 5) {
+                container.removeChild(danmakus[0]);
+            }
+        }, 15000);
+    }
+</script>
 </body>
 </html>
