@@ -378,9 +378,9 @@ swagger:
 
 ## 📧 联系方式
 
-- 项目主页: https://www.pgs.vip
 - GitHub: https://github.com/AdvancedX/PostgraduateReferenceSystem
 - 作者: AdvancedX
+- Email：advancedx@foxmail.com
 
 ## 🙏 致谢
 - 本项目基于ruoyi框架进行二次开发
