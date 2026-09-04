@@ -1,6 +1,7 @@
 package com.pgs.framework.shiro.web;
 
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.config.ShiroFilterConfiguration;
 import org.apache.shiro.web.filter.InvalidRequestFilter;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
@@ -61,12 +62,14 @@ public class CustomShiroFilterFactoryBean extends ShiroFilterFactoryBean
         // FilterChainResolver. It doesn't matter that the instance is an anonymous inner class
         // here - we're just using it because it is a concrete AbstractShiroFilter instance that accepts
         // injection of the SecurityManager and FilterChainResolver:
-        return new MySpringShiroFilter((WebSecurityManager) securityManager, chainResolver);
+        return new MySpringShiroFilter((WebSecurityManager) securityManager, chainResolver,
+                getShiroFilterConfiguration());
     }
 
     private static final class MySpringShiroFilter extends AbstractShiroFilter
     {
-        protected MySpringShiroFilter(WebSecurityManager webSecurityManager, FilterChainResolver resolver)
+        protected MySpringShiroFilter(WebSecurityManager webSecurityManager, FilterChainResolver resolver,
+                ShiroFilterConfiguration filterConfiguration)
         {
             if (webSecurityManager == null)
             {
@@ -75,6 +78,7 @@ public class CustomShiroFilterFactoryBean extends ShiroFilterFactoryBean
             else
             {
                 this.setSecurityManager(webSecurityManager);
+                this.setShiroFilterConfiguration(filterConfiguration);
                 if (resolver != null)
                 {
                     this.setFilterChainResolver(resolver);

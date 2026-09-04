@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="region != null  and region != ''"> and region = #{region}</if>
         </where>
+        <if test="params != null and params.limit != null">limit #{params.limit}</if>
     </select>
     
     <select id="selectSchoolInfoById" parameterType="String" resultMap="SchoolInfoResult">

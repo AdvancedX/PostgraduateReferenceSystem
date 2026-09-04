@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="majorsubject1 != null  and majorsubject1 != ''"> and majorsubject1 like concat('%', #{majorsubject1}, '%')</if>
             <if test="majorSubject2 != null  and majorSubject2 != ''"> and majorSubject2 like concat('%', #{majorSubject2}, '%')</if>
         </where>
+        <if test="params != null and params.limit != null">limit #{params.limit}</if>
     </select>
     
     <select id="selectMajorInfoById" parameterType="String" resultMap="MajorInfoResult">

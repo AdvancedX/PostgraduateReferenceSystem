@@ -277,6 +277,9 @@ public class ShiroConfig
         CustomShiroFilterFactoryBean shiroFilterFactoryBean = new CustomShiroFilterFactoryBean();
         // Shiro的核心安全接口,这个属性是必须的
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        // SSE 完成后 Servlet 容器会执行异步分发，此时不再经过原请求的 Shiro 线程绑定。
+        // 暴露 SecurityManager 仅作为异步分发时创建 Subject 的兜底；Agent 用户身份仍显式传递。
+        shiroFilterFactoryBean.getShiroFilterConfiguration().setStaticSecurityManagerEnabled(true);
         // 身份认证失败，则跳转到登录页面的配置
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
         // 权限认证失败，则跳转到指定页面

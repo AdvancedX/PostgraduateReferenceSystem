@@ -170,12 +170,100 @@ PostgraduateReferenceSystem/
 
 3. **AI 咨询**
    - 在线智能问答
+   - 使用当前登录用户权限查询院校、专业与历年分数
    - 获取报考建议
 
 4. **社区交流**
    - 发布经验分享
    - 浏览其他用户博客
    - 互动交流
+
+## AI Agent 架构
+
+`ai-chat` 已从单纯的 DeepSeek 对话改造成只读、权限感知的 Tool Calling Agent。当前请求链路为：
+
+```text
+POST /deepSeek/chat
+  -> 当前 Shiro 登录用户
+  -> AgentUserContext（用户、角色、权限的显式快照）
+  -> 按权限过滤可见 Tools
+  -> DeepSeek tool_calls
+  -> Tool 执行时再次鉴权
+  -> 现有业务 Service / MyBatis
+  -> Tool Result 回传 DeepSeek
+  -> 最终回答通过 SSE 返回
+```
+
+当前提供以下只读工具：
+
+| Tool | 现有 Service | 所需权限 |
+|------|--------------|----------|
+| `query_school` | `ISchoolInfoService` | `school:schoolinfo:list` |
+| `query_major` | `IMajorInfoService` | `major:majorinfo:list` |
+| `query_score` | `IYearScoreService` | `score:score:list` |
+
+Agent 最多连续执行 5 轮 Tool Calling。会话历史暂存在应用内存中，使用 `userId + conversationId` 隔离，每个会话最多保留 20 条用户/助手消息，进程最多保留 1000 个会话；应用重启后历史会清空。
+
+### 权限模型与安全边界
+
+- 身份只从服务器端 Shiro Subject 获取，不接受请求中的 `userId`、角色或权限。
+- 普通用户只会把自己有权调用的 Tool 暴露给模型；Tool 执行入口仍会使用与 Shiro 一致的 wildcard 语义二次鉴权。
+- Tool 只调用现有业务 Service，不开放 Mapper、任意 SQL 或系统写操作。
+- System Prompt 仅约束模型行为，不承担鉴权职责。
+- 日志记录 request ID、用户 ID、conversation ID、Tool 名称、耗时与失败状态，不记录 API Key。
+- `predict_admission` 暂未开放：现有预测流程包含 Controller 内计算及写库，不符合 Phase 1 的稳定只读 Tool 边界。
+
+### DeepSeek 配置
+
+运行前通过环境变量提供配置，不要把真实密钥提交到仓库：
+
+```bash
+export DEEPSEEK_API_KEY='your-api-key'
+# 可选：
+export DEEPSEEK_API_URL='https://api.deepseek.com/chat/completions'
+export DEEPSEEK_MODEL='deepseek-chat'
+```
+
+数据库与 Druid 控制台密码也通过环境变量提供：
+
+```bash
+export PGS_DB_URL='jdbc:mysql://localhost:3306/pgs?...'
+export PGS_DB_USERNAME='root'
+export PGS_DB_PASSWORD='your-database-password'
+export DRUID_ADMIN_USERNAME='admin'
+export DRUID_ADMIN_PASSWORD='your-druid-console-password'
+```
+
+接口继续兼容原路径，并使用 JSON 请求体：
+
+```http
+POST /deepSeek/chat
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "conversationId": "browser-session-1",
+  "message": "帮我查一下北京有哪些 985 学校"
+}
+```
+
+旧前端使用的 `question` 字段和 JSON 字符串请求仍可解析；未提供 `conversationId` 时使用 `default`，新页面会在浏览器 session 中自动生成 conversation ID。
+
+示例问题：
+
+- `帮我查一下北京有哪些 985 学校`
+- `长安大学有哪些计算机相关专业？`
+- `查询长安大学计算机专业 2022 到 2025 年的分数`
+- `先找北京的 985 学校，再查询其中的计算机专业和历年分数`
+
+### 构建与测试
+
+```bash
+mvn -pl ai-chat -am test
+mvn clean package -DskipTests
+```
+
+运行完整应用仍需按部署指南准备 MySQL；AI 请求还需要有效的 `DEEPSEEK_API_KEY`。单元测试使用 Mock Service/DeepSeek Client，不会访问真实数据库或 DeepSeek API。
 
 
 ## 📄 许可证

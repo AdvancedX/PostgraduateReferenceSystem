@@ -25,7 +25,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="majorId != null  and majorId != ''"> and major_id = #{majorId}</if>
             <if test="major != null  and major != ''"> and major like concat('%', #{major}, '%')</if>
             <if test="score != null  and score != ''"> and score = #{score}</if>
+            <if test="params != null and params.startYear != null"> and cast(year as unsigned) &gt;= #{params.startYear}</if>
+            <if test="params != null and params.endYear != null"> and cast(year as unsigned) &lt;= #{params.endYear}</if>
         </where>
+        <if test="params != null and params.limit != null">
+            order by cast(year as unsigned) desc
+            limit #{params.limit}
+        </if>
     </select>
     
     <select id="selectYearScoreById" parameterType="Long" resultMap="YearScoreResult">
