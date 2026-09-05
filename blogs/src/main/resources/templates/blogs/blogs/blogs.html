@@ -1,127 +1,324 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('博客论坛列表')" />
-    <style>
-        .card-bg {
-            background-color: #ffffff; /* You can change the color as needed */
-            border: 1px solid #ddd; /* Add a border */
-            border-radius: 5px; /* Optional: Add rounded corners */
-            padding: 15px; /* Optional: Add padding inside the card */
-            margin-bottom: 15px; /* Optional: Add space between cards */
-        }
-        .card-container {
-            margin-top: 20px; /* Adjust the value as needed */
-        }
-        .btn-margin {
-            margin-right: 10px; /* Adjust the value as needed */
-            margin-top: 20px; /* Adjust the value as needed */
-        }
-        .card-title {
-            font-weight: bold;
-        }
-    </style>
+    <th:block th:include="include :: header('内容与 Skills')" />
+    <link th:href="@{/pgs/css/blog-hub.css?v=20260905}" rel="stylesheet" />
 </head>
-<body class="gray-bg">
-<div class="container-div">
-    <div class="btn-group-sm" id="toolbar" role="group">
-        <a class="btn btn-success btn-margin" onclick="$.operate.add()" shiro:hasPermission="blogs:blogs:add">
-            <i class="fa fa-plus"></i> 写博客
-        </a>
-        <a class="btn btn-warning btn-margin" onclick="$.table.exportExcel()" shiro:hasPermission="blogs:blogs:export">
-            <i class="fa fa-download"></i> 导出
-        </a>
-    </div>
-
-        <!-- <div class="col-sm-12 select-table table-striped">
-    <table id="bootstrap-table"></table>
-</div> -->
-
-        <!-- 新增卡片样式的容器 -->
-        <div class="col-sm-12 card-container" id="card-container">
+<body class="skill-hub-page">
+<main class="skill-hub">
+    <section class="hub-hero">
+        <div class="hub-eyebrow">PGS Community</div>
+        <h1>经验汇聚成文章，<br>方法沉淀为 Skills。</h1>
+        <p>这里既是考研经验的内容社区，也是未来可复用 Skills 的分享入口。当前博客内容会继续正常展示，新资源字段接入后无需重做页面。</p>
+        <div class="hub-hero-actions" id="toolbar">
+            <button class="hub-button hub-button-primary" type="button" id="publishButton" shiro:hasPermission="blogs:blogs:add">
+                <i class="fa fa-plus"></i> 发布内容
+            </button>
+            <button class="hub-button hub-button-ghost" type="button" id="exportButton" shiro:hasPermission="blogs:blogs:export">
+                <i class="fa fa-download"></i> 导出数据
+            </button>
         </div>
+    </section>
 
+    <section class="hub-summary" aria-label="资源统计">
+        <div class="hub-stat"><div class="hub-stat-icon"><i class="fa fa-cubes"></i></div><div><strong id="totalCount">—</strong><span>全部内容</span></div></div>
+        <div class="hub-stat"><div class="hub-stat-icon"><i class="fa fa-bolt"></i></div><div><strong id="skillCount">—</strong><span>Skills 资源</span></div></div>
+        <div class="hub-stat"><div class="hub-stat-icon"><i class="fa fa-pencil-square-o"></i></div><div><strong id="articleCount">—</strong><span>经验文章</span></div></div>
+    </section>
+
+    <section class="hub-controls" aria-label="筛选资源">
+        <div class="hub-tabs" role="tablist">
+            <button class="hub-tab active" type="button" data-filter="all" role="tab" aria-selected="true">全部</button>
+            <button class="hub-tab" type="button" data-filter="skill" role="tab" aria-selected="false">Skills</button>
+            <button class="hub-tab" type="button" data-filter="article" role="tab" aria-selected="false">经验文章</button>
+        </div>
+        <div class="hub-tools">
+            <label class="hub-search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input id="resourceSearch" type="search" placeholder="搜索标题、作者或标签" autocomplete="off" />
+            </label>
+            <select class="hub-sort" id="resourceSort" aria-label="排序方式">
+                <option value="newest">最新发布</option>
+                <option value="popular">最多点赞</option>
+                <option value="title">标题排序</option>
+            </select>
+        </div>
+    </section>
+
+    <div class="hub-section-head">
+        <h2 id="sectionTitle">探索全部资源</h2>
+        <span id="resultCount">正在加载…</span>
     </div>
+
+    <section class="resource-grid" id="resourceGrid" aria-live="polite">
+        <div class="hub-state"><i class="fa fa-circle-o-notch fa-spin"></i><strong>正在整理资源</strong><span>马上就好</span></div>
+    </section>
+
+    <div style="display:none" aria-hidden="true"><table id="bootstrap-table"></table></div>
+</main>
+
+<div class="resource-modal" id="resourceModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <article class="resource-dialog">
+        <header class="resource-dialog-head">
+            <div>
+                <span class="resource-kind" id="detailKind">经验文章</span>
+                <h2 id="detailTitle"></h2>
+                <p id="detailMeta"></p>
+            </div>
+            <div class="resource-dialog-actions">
+                <button class="resource-delete" id="detailDelete" type="button" aria-label="删除" shiro:hasPermission="blogs:blogs:remove"><i class="fa fa-trash-o"></i></button>
+                <button class="resource-close" id="detailClose" type="button" aria-label="关闭">×</button>
+            </div>
+        </header>
+        <div class="resource-dialog-body" id="detailBody"></div>
+    </article>
 </div>
+
 <th:block th:include="include :: footer" />
+<script th:src="@{/pgs/js/content-renderer.js?v=20260905}"></script>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('blogs:blogs:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('blogs:blogs:remove')}]];
-    var prefix = ctx + "blogs/blogs";
+    (function () {
+        'use strict';
 
-    $(function() {
-        var options = {
-            url: prefix + "/list",
-            createUrl: prefix + "/add",
-            updateUrl: prefix + "/edit/{id}",
-            removeUrl: prefix + "/remove",
-            exportUrl: prefix + "/export",
-            modalName: "博客论坛",
-            columns: [{
-                checkbox: true
-            },
-                {
-                    field: 'id',
-                    title: '主键',
-                    visible: false
-                },
-                {
-                    field: 'username',
-                    title: '用户名称'
-                },
-                {
-                    field: 'title',
-                    title: '文章标题'
-                },
-                {
-                    field: 'content',
-                    title: '正文'
-                },
-                {
-                    field: 'likes',
-                    title: '点赞'
-                },
-                {
-                    field: 'createAt',
-                    title: '发布时间'
-                },
-                {
-                    title: '操作',
-                    align: 'center',
-                    formatter: function(value, row, index) {
-                        var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-                        return actions.join('');
-                    }
-                }]
-        };
-        $.table.init(options);
+        var prefix = ctx + 'blogs/blogs';
+        var resources = [];
+        var currentFilter = 'all';
+        var grid = document.getElementById('resourceGrid');
+        var searchInput = document.getElementById('resourceSearch');
+        var sortSelect = document.getElementById('resourceSort');
+        var modal = document.getElementById('resourceModal');
+        var lastFocusedElement = null;
+        var activeResource = null;
 
-        // 动态生成卡片内容
-        $.ajax({
-            url: options.url,
-            type: 'POST',
-            success: function(data) {
-                var cardContainer = $('#card-container');
-                data.rows.forEach(function(row) {
-                    var card = `
-                        <div class="card card-bg">
-                            <div class="card-body">
-                                <h1 class="card-title">${row.title}</h1>
-                                <h3 class="card-subtitle mb-2 text-muted">作者：${row.username}</h3>
-                                <hr>
-                                <p class="card-text">${row.content}</p>
-                                <p class="card-text"><small class="text-muted">发布时间: ${row.createAt}</small></p>
-                                <a href="javascript:void(0)" class="card-link btn btn-danger btn-xs ${removeFlag}" onclick="$.operate.remove('${row.id}')"><i class="fa fa-remove"></i> 删除</a>
-                            </div>
-                        </div>
-                    `;
-                    cardContainer.append(card);
-                });
+        function valueOf(row, keys, fallback) {
+            for (var i = 0; i < keys.length; i += 1) {
+                if (row[keys[i]] !== undefined && row[keys[i]] !== null && row[keys[i]] !== '') return row[keys[i]];
             }
+            return fallback;
+        }
+
+        function normalizeTags(value) {
+            if (Array.isArray(value)) return value.filter(Boolean).map(String);
+            if (!value) return [];
+            if (/^\s*\[/.test(String(value))) {
+                try {
+                    var parsed = JSON.parse(value);
+                    if (Array.isArray(parsed)) return parsed.filter(Boolean).map(String);
+                } catch (ignored) {
+                    // 兼容普通逗号分隔的标签文本。
+                }
+            }
+            return String(value).split(/[,，|]/).map(function (tag) { return tag.trim(); }).filter(Boolean);
+        }
+
+        function normalizeResource(row) {
+            var rawType = String(valueOf(row, ['resourceType', 'contentType', 'type'], '')).toLowerCase();
+            var isSkill = rawType === 'skill' || !!valueOf(row, ['skillName', 'installCommand', 'packageName'], '');
+            var content = String(valueOf(row, ['content', 'readme', 'body'], ''));
+            var description = String(valueOf(row, ['summary', 'description', 'excerpt'], ''));
+            if (!description) description = PgsContentRenderer.plainText(content).slice(0, 150);
+            var format = String(valueOf(row, ['contentFormat', 'format'], '')).toLowerCase();
+            if (format === 'md') format = 'markdown';
+            if (!format) format = /<\/?[a-z][\s\S]*>/i.test(content) ? 'html' : 'text';
+            return {
+                id: valueOf(row, ['id', 'resourceId'], ''),
+                type: isSkill ? 'skill' : 'article',
+                title: String(valueOf(row, ['title', 'name', 'skillName'], '未命名资源')),
+                description: description || '作者暂未填写简介。',
+                content: content,
+                format: format,
+                author: String(valueOf(row, ['username', 'author', 'publisher'], '匿名用户')),
+                tags: normalizeTags(valueOf(row, ['tags', 'keywords', 'categories'], [])),
+                version: String(valueOf(row, ['version', 'latestVersion'], '')),
+                installCommand: String(valueOf(row, ['installCommand', 'command'], '')),
+                likes: Number(valueOf(row, ['likes', 'stars', 'likeCount'], 0)) || 0,
+                downloads: Number(valueOf(row, ['downloads', 'downloadCount', 'uses'], 0)) || 0,
+                createdAt: String(valueOf(row, ['updatedAt', 'createAt', 'createdAt', 'publishTime'], '')),
+                raw: row
+            };
+        }
+
+        function initials(name) {
+            return (String(name || 'U').trim().slice(0, 1) || 'U').toUpperCase();
+        }
+
+        function dateValue(value) {
+            var time = Date.parse(String(value || '').replace(/-/g, '/'));
+            return isNaN(time) ? 0 : time;
+        }
+
+        function makeElement(tag, className, text) {
+            var element = document.createElement(tag);
+            if (className) element.className = className;
+            if (text !== undefined) element.textContent = text;
+            return element;
+        }
+
+        function createCard(resource, index) {
+            var card = makeElement('article', 'resource-card');
+            card.tabIndex = 0;
+            card.style.animationDelay = Math.min(index * 35, 210) + 'ms';
+            card.setAttribute('aria-label', '查看：' + resource.title);
+
+            var top = makeElement('div', 'resource-top');
+            top.appendChild(makeElement('span', 'resource-kind ' + resource.type, resource.type === 'skill' ? 'SKILL' : '经验文章'));
+            if (resource.version) top.appendChild(makeElement('span', 'resource-version', 'v' + resource.version.replace(/^v/i, '')));
+            card.appendChild(top);
+            card.appendChild(makeElement('h3', '', resource.title));
+            card.appendChild(makeElement('p', 'resource-description', resource.description));
+
+            var tags = makeElement('div', 'resource-tags');
+            var displayTags = resource.tags.slice(0, 3);
+            if (!displayTags.length) displayTags = [resource.type === 'skill' ? '可复用能力' : '经验分享'];
+            displayTags.forEach(function (tag) { tags.appendChild(makeElement('span', 'resource-tag', tag)); });
+            card.appendChild(tags);
+
+            var meta = makeElement('div', 'resource-meta');
+            var author = makeElement('div', 'resource-author');
+            author.appendChild(makeElement('span', 'resource-avatar', initials(resource.author)));
+            author.appendChild(makeElement('span', '', resource.author));
+            var numbers = makeElement('div', 'resource-numbers');
+            numbers.appendChild(makeElement('span', '', '♡ ' + resource.likes));
+            if (resource.type === 'skill' && resource.downloads) numbers.appendChild(makeElement('span', '', '↓ ' + resource.downloads));
+            else if (resource.createdAt) numbers.appendChild(makeElement('span', '', resource.createdAt.slice(0, 10)));
+            meta.appendChild(author);
+            meta.appendChild(numbers);
+            card.appendChild(meta);
+
+            card.addEventListener('click', function () { openDetail(resource, card); });
+            card.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openDetail(resource, card);
+                }
+            });
+            return card;
+        }
+
+        function visibleResources() {
+            var keyword = searchInput.value.trim().toLowerCase();
+            var filtered = resources.filter(function (resource) {
+                if (currentFilter !== 'all' && resource.type !== currentFilter) return false;
+                if (!keyword) return true;
+                return [resource.title, resource.description, resource.author, resource.tags.join(' ')].join(' ').toLowerCase().indexOf(keyword) !== -1;
+            });
+            var mode = sortSelect.value;
+            filtered.sort(function (a, b) {
+                if (mode === 'popular') return b.likes - a.likes;
+                if (mode === 'title') return a.title.localeCompare(b.title, 'zh-CN');
+                return dateValue(b.createdAt) - dateValue(a.createdAt) || Number(b.id || 0) - Number(a.id || 0);
+            });
+            return filtered;
+        }
+
+        function renderResources() {
+            var list = visibleResources();
+            grid.innerHTML = '';
+            document.getElementById('resultCount').textContent = '共 ' + list.length + ' 项';
+            document.getElementById('sectionTitle').textContent = currentFilter === 'skill' ? '探索 Skills' : (currentFilter === 'article' ? '阅读经验文章' : '探索全部资源');
+            if (!list.length) {
+                grid.appendChild(makeElement('div', 'hub-state'));
+                grid.firstChild.innerHTML = '<i class="fa fa-search"></i><strong>没有找到匹配内容</strong><span>换个关键词或筛选条件试试</span>';
+                return;
+            }
+            list.forEach(function (resource, index) { grid.appendChild(createCard(resource, index)); });
+        }
+
+        function updateStats(total) {
+            var skillTotal = resources.filter(function (item) { return item.type === 'skill'; }).length;
+            document.getElementById('totalCount').textContent = total == null ? resources.length : total;
+            document.getElementById('skillCount').textContent = skillTotal;
+            document.getElementById('articleCount').textContent = resources.length - skillTotal;
+        }
+
+        function openDetail(resource, source) {
+            lastFocusedElement = source;
+            activeResource = resource;
+            var kind = document.getElementById('detailKind');
+            kind.className = 'resource-kind ' + resource.type;
+            kind.textContent = resource.type === 'skill' ? 'SKILL' : '经验文章';
+            document.getElementById('detailTitle').textContent = resource.title;
+            document.getElementById('detailMeta').textContent = resource.author + (resource.createdAt ? ' · ' + resource.createdAt : '');
+            var detailBody = document.getElementById('detailBody');
+            detailBody.innerHTML = '';
+            if (resource.installCommand) {
+                detailBody.appendChild(makeElement('div', 'resource-install', resource.installCommand));
+            }
+            var content = makeElement('div', 'resource-content');
+            if (resource.format === 'markdown') content.innerHTML = PgsContentRenderer.renderMarkdown(resource.content);
+            else if (resource.format === 'html') content.innerHTML = PgsContentRenderer.sanitizeHtml(resource.content);
+            else {
+                content.classList.add('is-plain');
+                content.textContent = resource.content;
+            }
+            detailBody.appendChild(content);
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('detailClose').focus();
+        }
+
+        function closeDetail() {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+            if (lastFocusedElement) lastFocusedElement.focus();
+        }
+
+        function loadResources(data) {
+            var rows = Array.isArray(data) ? data : ((data && data.rows) || []);
+            resources = rows.map(normalizeResource);
+            updateStats(data && data.total);
+            renderResources();
+        }
+
+        document.querySelectorAll('.hub-tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.hub-tab').forEach(function (item) {
+                    var active = item === tab;
+                    item.classList.toggle('active', active);
+                    item.setAttribute('aria-selected', active ? 'true' : 'false');
+                });
+                currentFilter = tab.getAttribute('data-filter');
+                renderResources();
+            });
         });
-    });
+        searchInput.addEventListener('input', renderResources);
+        sortSelect.addEventListener('change', renderResources);
+        document.getElementById('detailClose').addEventListener('click', closeDetail);
+        var detailDelete = document.getElementById('detailDelete');
+        if (detailDelete) detailDelete.addEventListener('click', function () {
+            if (!activeResource || !activeResource.id) return;
+            var id = activeResource.id;
+            closeDetail();
+            $.operate.remove(id);
+        });
+        modal.addEventListener('click', function (event) { if (event.target === modal) closeDetail(); });
+        document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && modal.classList.contains('open')) closeDetail(); });
+
+        var publishButton = document.getElementById('publishButton');
+        if (publishButton) publishButton.addEventListener('click', function () { $.modal.open('发布内容', prefix + '/add'); });
+        var exportButton = document.getElementById('exportButton');
+        if (exportButton) exportButton.addEventListener('click', function () { $.table.exportExcel(); });
+
+        $(function () {
+            $.table.init({
+                id: 'bootstrap-table',
+                url: prefix + '/list',
+                createUrl: prefix + '/add',
+                updateUrl: prefix + '/edit/{id}',
+                removeUrl: prefix + '/remove',
+                exportUrl: prefix + '/export',
+                modalName: '内容',
+                pagination: false,
+                pageSize: 100,
+                showSearch: false,
+                showRefresh: false,
+                showColumns: false,
+                showToggle: false,
+                columns: [{ field: 'id', title: '主键' }],
+                onLoadSuccess: loadResources
+            });
+        });
+    })();
 </script>
 </body>
 </html>

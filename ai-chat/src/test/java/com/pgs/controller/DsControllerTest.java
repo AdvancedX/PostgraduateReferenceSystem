@@ -19,12 +19,28 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 class DsControllerTest {
+    @Test
+    void servesTheAiChatPage() throws Exception {
+        DsController controller = new DsController(
+                mock(AgentService.class), mock(AgentUserContextFactory.class), new ObjectMapper());
+        try {
+            standaloneSetup(controller).build()
+                    .perform(get("/deepSeek"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("main"));
+        } finally {
+            controller.shutdown();
+        }
+    }
+
     @Test
     void encodesMultilineAnswerAsOneJsonSseDataLine() throws Exception {
         AgentService agentService = mock(AgentService.class);

@@ -50,7 +50,7 @@ public class DsController {
      */
     @GetMapping()
     public ModelAndView chat(ModelAndView modelAndView) {
-        modelAndView.setViewName("chat");
+        modelAndView.setViewName("main");
         return modelAndView;
     }
 

@@ -1,310 +1,306 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeepSeek Chat</title>
-  <style>
-    :root {
-      --primary-color: #5b8cff;
-      --button-bg: #f8f9fb;
-      --button-hover-bg: #e9ecef;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      min-width: 100vw;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 60%;
-      height: 100%;
-      padding: 20px;
-      background: transparent; /* 移除背景 */
-      border-radius: 0; /* 移除圆角 */
-      box-shadow: none; /* 移除阴影 */
-      text-align: center;
-    }
-    .chat-icon {
-      margin-bottom: 20px;
-    }
-    .chat-icon img {
-      width: 80px;
-      height: 80px;
-    }
-    .chat-options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin: 20px 0;
-    }
-    .chat-option {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 20px;
-      background: var(--button-bg);
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      color: #333;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .chat-option:hover {
-      background: var(--button-hover-bg);
-    }
-    .chat-messages {
-      flex: 1;
-      width: 100%;
-      padding: 20px;
-      padding-bottom: 80px; /* 添加底部内边距，防止内容被聊天框遮挡 */
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .chat-message {
-      max-width: 75%;
-      padding: 16px 20px;
-      border-radius: 20px;
-      line-height: 1.5;
-      animation: messageAppear 0.3s ease-out;
-      position: relative;
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
-    .chat-message.user {
-      background: linear-gradient(135deg, #5b8cff 0%, #3d6ef7 100%);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-      box-shadow: var(--shadow);
-    }
-    .chat-message.bot {
-      background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-      color: #2d3748;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      box-shadow: var(--shadow);
-    }
-    .chat-input {
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      gap: 12px;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      padding: 10px;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    .chat-input button {
-      padding: 10px 20px;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .chat-input button:hover {
-      background: #407bff;
-    }
-    @keyframes messageAppear {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+  <meta name="description" content="考研智导 AI 助手，提供院校、专业与备考规划建议">
+  <title>考研智导 · AI 助手</title>
+  <link th:href="@{/pgs/css/ai-chat.css?v=20260905}" rel="stylesheet">
 </head>
-<body>
-<div class="chat-container">
-  <!-- 图标区域 -->
-  <div class="chat-icon">
-    <img th:src="@{/img/aichat_icon2.png}">
-  </div>
-  <!-- 选项按钮区域 -->
-  <div class="chat-options">
-    <div class="chat-option" onclick="sendPredefinedMessage('计算机学生应该怎么发展？')">计算机学生应该怎么发展？</div>
-    <div class="chat-option" onclick="sendPredefinedMessage('土木老哥应该如何突破时代局限？')">土木老哥应该如何突破时代局限？</div>
-    <div class="chat-option" onclick="sendPredefinedMessage('帮我设计一个408复习规划表')">帮我设计一个408复习规划表</div>
-    <div class="chat-option" onclick="sendPredefinedMessage('报考长安大学计算机科学与技术的难度如何？')">报考长安大学计算机科学与技术的难度如何？</div>
-    <div class="chat-option" onclick="sendPredefinedMessage('考研失败应该怎么规划调剂？')">考研失败应该怎么规划调剂？</div>
-    <div class="chat-option" onclick="sendPredefinedMessage('生化环材天坑专业的考研前景如何？')">生化环材天坑专业的考研前景如何？</div>
-  </div>
-  <!-- 消息展示区域 -->
-  <div class="chat-messages" id="chatMessages"></div>
-  <!-- 输入区域 -->
-  <div class="chat-input">
-    <input type="text" id="questionInput" placeholder="和考研智导机器人聊聊..." onkeydown="handleKeyDown(event)">
-    <button id="sendButton" disabled>发送</button>
-  </div>
-</div>
+<body class="ai-chat-page">
+<main class="ai-shell">
+  <aside class="ai-sidebar" aria-label="助手信息">
+    <div class="ai-brand">
+      <div class="ai-brand-mark" aria-hidden="true">✦</div>
+      <div class="ai-brand-copy">
+        <strong>考研智导</strong>
+        <span>PGS AI Assistant</span>
+      </div>
+    </div>
 
+    <button class="ai-new-chat" id="newChatButton" type="button">
+      <span>开启新对话</span><span aria-hidden="true">＋</span>
+    </button>
+
+    <div class="ai-sidebar-label">我可以帮你</div>
+    <div class="ai-capabilities">
+      <div class="ai-capability"><i aria-hidden="true">校</i><span>院校与专业分析</span></div>
+      <div class="ai-capability"><i aria-hidden="true">分</i><span>历年分数线查询</span></div>
+      <div class="ai-capability"><i aria-hidden="true">策</i><span>备考与调剂规划</span></div>
+    </div>
+
+    <div class="ai-sidebar-note">
+      <strong>回答仅供参考</strong>
+      招生政策与录取数据可能变化，重要决定请以院校官方信息为准。
+    </div>
+  </aside>
+
+  <section class="ai-workspace" aria-label="AI 对话">
+    <header class="ai-topbar">
+      <h1>AI 学业顾问</h1>
+      <div class="ai-status"><span class="ai-status-dot"></span><span id="statusText">已就绪</span></div>
+    </header>
+
+    <div class="ai-conversation">
+      <div class="ai-messages" id="chatMessages" role="log" aria-live="polite" aria-label="对话消息">
+        <section class="ai-empty" id="emptyState">
+          <div class="ai-empty-icon" aria-hidden="true">✦</div>
+          <h2>把复杂的考研问题，<br>聊得更清楚一点。</h2>
+          <p>从院校选择、专业数据到复习节奏，我会结合系统数据与你的实际情况，一步步整理出可执行的建议。</p>
+          <div class="ai-prompts" aria-label="推荐问题">
+            <button class="ai-prompt" type="button" data-prompt="帮我制定一份 408 三个月复习计划">
+              <strong>制定复习计划</strong><span>帮我制定一份 408 三个月复习计划</span>
+            </button>
+            <button class="ai-prompt" type="button" data-prompt="报考长安大学计算机科学与技术的难度如何？">
+              <strong>分析报考难度</strong><span>长安大学计算机专业值得冲吗？</span>
+            </button>
+            <button class="ai-prompt" type="button" data-prompt="考研初试成绩不理想，应该怎么规划调剂？">
+              <strong>规划调剂策略</strong><span>初试成绩不理想，下一步怎么做？</span>
+            </button>
+            <button class="ai-prompt" type="button" data-prompt="计算机专业研究生有哪些发展方向？">
+              <strong>探索专业方向</strong><span>计算机研究生有哪些发展路径？</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="ai-composer-wrap">
+      <form class="ai-composer" id="chatForm" data-endpoint="/deepSeek/chat" th:attr="data-endpoint=@{/deepSeek/chat}">
+        <textarea id="questionInput" rows="1" maxlength="4000" placeholder="输入你的问题…" aria-label="输入问题"></textarea>
+        <button class="ai-send" id="sendButton" type="submit" disabled aria-label="发送消息"><span aria-hidden="true">↑</span></button>
+      </form>
+      <div class="ai-composer-meta">
+        <span>Enter 发送 · Shift + Enter 换行</span>
+        <span id="characterCount">0 / 4000</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script th:src="@{/pgs/js/content-renderer.js?v=20260905}"></script>
 <script>
-  const questionInput = document.getElementById('questionInput');
-  const sendButton = document.getElementById('sendButton');
-  const chatMessages = document.getElementById('chatMessages');
-  const conversationStorageKey = 'pgs-agent-conversation-id';
-  let conversationId = sessionStorage.getItem(conversationStorageKey);
-  if (!conversationId) {
-    conversationId = (window.crypto && window.crypto.randomUUID)
-      ? window.crypto.randomUUID()
-      : `chat-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    sessionStorage.setItem(conversationStorageKey, conversationId);
-  }
-  let isBotResponding = false;
+  (function () {
+    'use strict';
 
-  // 输入验证
-  questionInput.addEventListener('input', () => {
-    sendButton.disabled = questionInput.value.trim().length === 0;
-  });
+    var form = document.getElementById('chatForm');
+    var questionInput = document.getElementById('questionInput');
+    var sendButton = document.getElementById('sendButton');
+    var chatMessages = document.getElementById('chatMessages');
+    var emptyState = document.getElementById('emptyState');
+    var statusText = document.getElementById('statusText');
+    var characterCount = document.getElementById('characterCount');
+    var newChatButton = document.getElementById('newChatButton');
+    var storageKey = 'pgs-agent-conversation-id';
+    var conversationId = getConversationId();
+    var isResponding = false;
+    var activeController = null;
 
-  // 回车发送
-  function handleKeyDown(e) {
-    if (e.key === 'Enter' && !sendButton.disabled && !isBotResponding) {
-      sendButton.click();
+    function createConversationId() {
+      return (window.crypto && window.crypto.randomUUID)
+        ? window.crypto.randomUUID()
+        : 'chat-' + Date.now() + '-' + Math.random().toString(36).slice(2);
     }
-  }
 
-  // 发送逻辑
-  sendButton.addEventListener('click', async () => {
-    if (isBotResponding) return;
-
-    const question = questionInput.value.trim();
-    if (!question) return;
-
-    questionInput.value = '';
-    sendButton.disabled = true;
-    isBotResponding = true;
-
-    displayMessage('user', question);
-
-    try {
-      const typingIndicator = createTypingIndicator();
-
-      const response = await fetch('/deepSeek/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'text/event-stream',
-        },
-        body: JSON.stringify({ conversationId, message: question }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      typingIndicator.remove();
-      await handleBotResponse(response);
-    } catch (error) {
-      displayMessage('bot', 'Error: Unable to process your request.');
-    } finally {
-      isBotResponding = false;
-      questionInput.focus();
+    function getConversationId() {
+      var stored = sessionStorage.getItem(storageKey);
+      if (stored) return stored;
+      var created = createConversationId();
+      sessionStorage.setItem(storageKey, created);
+      return created;
     }
-  });
 
-  // 处理流式响应
-  async function handleBotResponse(response) {
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let currentBotMessage = displayMessage('bot', '');
+    function updateComposer() {
+      var length = questionInput.value.length;
+      questionInput.style.height = 'auto';
+      questionInput.style.height = Math.min(questionInput.scrollHeight, 168) + 'px';
+      characterCount.textContent = length + ' / 4000';
+      sendButton.disabled = !isResponding && questionInput.value.trim().length === 0;
+    }
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+    function setResponding(value) {
+      isResponding = value;
+      statusText.textContent = value ? '正在思考' : '已就绪';
+      sendButton.classList.toggle('is-stop', value);
+      sendButton.innerHTML = value ? '<span aria-hidden="true">■</span>' : '<span aria-hidden="true">↑</span>';
+      sendButton.setAttribute('aria-label', value ? '停止生成' : '发送消息');
+      sendButton.disabled = false;
+      updateComposer();
+    }
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+    function scrollToBottom() {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    }
 
-        lines.forEach((line) => {
-          if (line.startsWith('data:')) {
-            const rawData = line.replace(/^data:\s*/, '').trim();
-            if (rawData === '[DONE]') return;
+    function createMessage(sender, content) {
+      if (emptyState && emptyState.parentNode) emptyState.remove();
 
-            let data = rawData;
-            try {
-              const parsed = JSON.parse(rawData);
-              if (typeof parsed === 'string') data = parsed;
-            } catch (ignored) {
-              // 兼容旧服务端直接发送的纯文本事件。
-            }
-            currentBotMessage.textContent += data;
-          }
+      var article = document.createElement('article');
+      article.className = 'ai-message ' + sender;
+      var avatar = document.createElement('div');
+      avatar.className = 'ai-avatar';
+      avatar.setAttribute('aria-hidden', 'true');
+      avatar.textContent = sender === 'user' ? '你' : '✦';
+      var body = document.createElement('div');
+      body.className = 'ai-message-body';
+
+      if (sender === 'bot') body.innerHTML = PgsContentRenderer.renderMarkdown(content || '');
+      else body.textContent = content;
+
+      article.appendChild(avatar);
+      article.appendChild(body);
+      chatMessages.appendChild(article);
+      scrollToBottom();
+      return { article: article, body: body };
+    }
+
+    function addCopyAction(message, rawText) {
+      var actions = document.createElement('div');
+      actions.className = 'ai-message-actions';
+      var copy = document.createElement('button');
+      copy.type = 'button';
+      copy.className = 'ai-copy';
+      copy.textContent = '复制回答';
+      copy.addEventListener('click', function () {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(rawText).then(function () {
+          copy.textContent = '已复制';
+          window.setTimeout(function () { copy.textContent = '复制回答'; }, 1400);
         });
-
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    } finally {
-      currentBotMessage = null;
+      });
+      actions.appendChild(copy);
+      message.body.appendChild(actions);
     }
-  }
 
-  // 显示消息
-  function displayMessage(sender, content) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${sender}`;
-    messageDiv.textContent = content;
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    return messageDiv;
-  }
+    function createTypingIndicator() {
+      var message = createMessage('bot', '');
+      message.body.innerHTML = '<div class="ai-typing" aria-label="AI 正在思考"><span></span><span></span><span></span></div>';
+      return message;
+    }
 
-  // 创建打字指示器
-  function createTypingIndicator() {
-    const container = document.createElement('div');
-    container.className = 'typing-indicator';
-    container.innerHTML = `
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    `;
-    chatMessages.appendChild(container);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    return container;
-  }
+    function parseEventBlock(block) {
+      var dataLines = block.split('\n').filter(function (line) {
+        return line.indexOf('data:') === 0;
+      }).map(function (line) {
+        return line.slice(5).replace(/^\s/, '');
+      });
+      if (!dataLines.length) return null;
+      var raw = dataLines.join('\n').trim();
+      if (!raw || raw === '[DONE]') return raw;
+      try {
+        var parsed = JSON.parse(raw);
+        return typeof parsed === 'string' ? parsed : raw;
+      } catch (ignored) {
+        return raw;
+      }
+    }
 
-  // 发送预定义消息
-  function sendPredefinedMessage(message) {
-    chatMessages.style.display = 'flex'; // 显示消息区域
-    //displayMessage('user', message);
-    questionInput.value = message;
-    sendButton.disabled = false;
-    //sendButton.click();
-  }
+    async function readResponse(response, message) {
+      if (!response.body || !response.body.getReader) {
+        var fallback = await response.text();
+        message.body.innerHTML = PgsContentRenderer.renderMarkdown(fallback);
+        return fallback;
+      }
+
+      var reader = response.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+      var answer = '';
+      while (true) {
+        var part = await reader.read();
+        buffer += decoder.decode(part.value || new Uint8Array(), { stream: !part.done }).replace(/\r\n/g, '\n');
+        var blocks = buffer.split('\n\n');
+        buffer = blocks.pop() || '';
+        blocks.forEach(function (block) {
+          var data = parseEventBlock(block);
+          if (data && data !== '[DONE]') answer += data;
+        });
+        message.body.innerHTML = PgsContentRenderer.renderMarkdown(answer);
+        scrollToBottom();
+        if (part.done) break;
+      }
+      if (buffer.trim()) {
+        var finalData = parseEventBlock(buffer);
+        if (finalData && finalData !== '[DONE]') answer += finalData;
+      }
+      message.body.innerHTML = PgsContentRenderer.renderMarkdown(answer);
+      return answer;
+    }
+
+    async function sendMessage(question) {
+      createMessage('user', question);
+      var typing = createTypingIndicator();
+      setResponding(true);
+      activeController = window.AbortController ? new AbortController() : null;
+
+      try {
+        var response = await fetch(form.getAttribute('data-endpoint'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' },
+          body: JSON.stringify({ conversationId: conversationId, message: question }),
+          signal: activeController ? activeController.signal : undefined
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        typing.body.innerHTML = '';
+        var answer = await readResponse(response, typing);
+        if (!answer.trim()) typing.body.textContent = '暂时没有收到回答，请稍后重试。';
+        else addCopyAction(typing, answer);
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          typing.body.innerHTML = '<p>已停止生成。</p>';
+        } else {
+          typing.body.innerHTML = '<p>连接暂时出现问题，请稍后再试。</p>';
+          console.error('AI chat request failed:', error);
+        }
+      } finally {
+        activeController = null;
+        setResponding(false);
+        questionInput.focus();
+      }
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (isResponding) {
+        if (activeController) activeController.abort();
+        return;
+      }
+      var question = questionInput.value.trim();
+      if (!question) return;
+      questionInput.value = '';
+      updateComposer();
+      sendMessage(question);
+    });
+
+    questionInput.addEventListener('input', updateComposer);
+    questionInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+        event.preventDefault();
+        form.requestSubmit ? form.requestSubmit() : sendButton.click();
+      }
+    });
+
+    document.querySelectorAll('[data-prompt]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        questionInput.value = button.getAttribute('data-prompt');
+        updateComposer();
+        questionInput.focus();
+      });
+    });
+
+    newChatButton.addEventListener('click', function () {
+      if (activeController) activeController.abort();
+      conversationId = createConversationId();
+      sessionStorage.setItem(storageKey, conversationId);
+      chatMessages.innerHTML = '';
+      chatMessages.appendChild(emptyState);
+      questionInput.value = '';
+      updateComposer();
+      questionInput.focus();
+    });
+
+    updateComposer();
+  })();
 </script>
 </body>
 </html>

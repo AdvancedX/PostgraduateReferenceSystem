@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('新增博客论坛')" />
+    <th:block th:include="include :: header('发布内容')" />
     <th:block th:include="include :: summernote-css" />
+    <style>
+        body.publish-page { color: #1d2939; background: #f5f7fb; }
+        .publish-shell { width: min(880px, calc(100% - 30px)); margin: 20px auto; padding: 0; overflow: hidden; border: 1px solid rgba(31,48,75,.1); border-radius: 18px; background: #fff; box-shadow: 0 18px 45px rgba(36,57,92,.08); }
+        .publish-head { padding: 23px 27px 19px; color: #fff; background: linear-gradient(125deg, #1c2d4e, #315fc4); }
+        .publish-head span { color: #b9cbff; font-size: 11px; font-weight: 700; letter-spacing: .1em; }
+        .publish-head h2 { margin: 7px 0 5px; font-size: 22px; }
+        .publish-head p { margin: 0; color: rgba(237,243,255,.76); font-size: 12px; line-height: 1.6; }
+        .publish-form { padding: 25px 27px 18px; }
+        .publish-form .form-group { margin: 0 0 21px; }
+        .publish-form label { display: block; margin-bottom: 8px; color: #344054; font-size: 12px; font-weight: 650; }
+        .publish-form .form-control { height: 43px; border-color: rgba(31,48,75,.14); border-radius: 9px; box-shadow: none; }
+        .publish-form .form-control:focus { border-color: rgba(49,94,232,.55); box-shadow: 0 0 0 3px rgba(49,94,232,.08); }
+        .publish-form .note-editor { margin: 0; overflow: hidden; border-color: rgba(31,48,75,.14); border-radius: 10px; box-shadow: none; }
+        .publish-form .note-toolbar { border-bottom-color: rgba(31,48,75,.09); background: #f7f9fc; }
+        .field-hint { margin-top: 7px; color: #8a94a6; font-size: 11px; }
+        @media (max-width: 620px) { .publish-shell { width: calc(100% - 16px); margin: 8px auto; } .publish-head, .publish-form { padding-left: 18px; padding-right: 18px; } }
+    </style>
 </head>
-<body class="white-bg">
-<div class="wrapper wrapper-content animated fadeInRight ibox-content">
-    <form class="form-horizontal m" id="form-blogs-add">
+<body class="publish-page">
+<div class="publish-shell animated fadeInRight">
+    <header class="publish-head">
+        <span>SHARE WITH COMMUNITY</span>
+        <h2>发布一份有用的内容</h2>
+        <p>现在可以分享经验文章；后续接入 Skills 字段后，发布流程会在这里自然扩展。</p>
+    </header>
+    <form class="publish-form" id="form-blogs-add">
         <div class="form-group">
-            <label class="col-sm-3 control-label">标题：</label>
-            <div class="col-sm-8">
-                <input name="title" class="form-control" type="text">
-            </div>
+            <label for="title">标题</label>
+            <input id="title" name="title" class="form-control" type="text" maxlength="255" placeholder="用一句话说明你想分享什么">
+            <div class="field-hint">清晰具体的标题更容易被其他同学找到。</div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">正文：</label>
-            <div class="col-sm-8">
-                <div class="summernote" id="content"></div>
-                <input type="hidden" name="content" id="contentInput" />
-            </div>
+            <label for="content">正文</label>
+            <div class="summernote" id="content"></div>
+            <input type="hidden" name="content" id="contentInput" />
         </div>
         <input type="hidden" name="username" id="username" value="" />
     </form>
@@ -28,6 +47,15 @@
 <script th:inline="javascript">
     var prefix = ctx + "blogs/blogs";
     $("#form-blogs-add").validate({
+        ignore: [],
+        rules: {
+            title: { required: true, maxlength: 255 },
+            content: { required: true }
+        },
+        messages: {
+            title: { required: "请输入标题" },
+            content: { required: "请输入正文" }
+        }
     });
 
     function submitHandler() {
@@ -41,6 +69,8 @@
         $('.summernote').summernote({
             lang: 'zh-CN',
             dialogsInBody: true,
+            height: 280,
+            placeholder: '写下你的经验、方法或资源说明…',
             callbacks: {
                 onChange: function(contents, $edittable) {
                     $("input[name='" + this.id + "']").val(contents);
